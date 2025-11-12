@@ -1,6 +1,3 @@
-/* * นี่คือฟังก์ชันหลักสำหรับแปลงตัวเลข
- * (โค้ดนี้คือตัวเดียวกับที่ผมเคยให้ไปครับ)
- */
 var getBathText = function (inputNumber) {
     var getText = function (input) {
         var toNumber = input.toString();
