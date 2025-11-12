@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
+    
+    <title>แบบบันทึกขอรับการสนับสนุนทุน</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Sarabun', sans-serif; background-color: #f7f9fb; }
+        
+        /* ... (CSS ทั้งหมดของคุณเหมือนเดิม) ... */
+        input[type="text"]:focus,
+        input[type="tel"]:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+        .loader {
+          border: 8px solid #f3f3f3; 
+          border-radius: 50%;
+          border-top: 8px solid #939393; 
+          width: 60px;
+          height: 60px;
+          -webkit-animation: spin 2s linear infinite;
+          animation: spin 2s linear infinite;
+          margin-left: auto;
+          margin-right: auto;
+        }
+        @-webkit-keyframes spin {
+          0% { -webkit-transform: rotate(0deg); }
+          100% { -webkit-transform: rotate(360deg); }
+        }
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        select:disabled {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            padding-right: 2.5rem !important; 
+            background-image: none;
+        }
+        .flatpickr-calendar {
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid #f3f4f6; 
+            width: 320px; 
+        }
+        .flatpickr-months {
+            background: #f3f4f6; 
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            padding: 10px 12px;
+            border-bottom: 1px solid #f3f4f6;
+            height: auto !important;
+        }
+        .flatpickr-current-month .flatpickr-monthDropdown-months {
+            font-size: 0.875rem !important; 
+            font-weight: 600;
+            color: #374151 !important; 
+            background: transparent !important; 
+            border: none !important; 
+            padding: 2px 0px !important; 
+            border-radius: 6px !important; 
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            box-shadow: none !important;
+            width: auto !important;
+            line-height: 1.5 !important;
+        }
+        .flatpickr-current-month .flatpickr-monthDropdown-months:hover {
+            background: transparent !important; 
+        }
+        .flatpickr-current-month input.numInput {
+            font-size: 0.875rem !important; 
+            font-weight: 600;
+            color: #374151 !important; 
+            background: transparent !important; 
+            border: none !important; 
+            padding: 4px 8px !important; 
+            width: auto !important; 
+            border-radius: 6px !important;
+            box-shadow: none !important;
+            line-height: normal !important;
+        }
+         .flatpickr-current-month input.numInput:hover {
+            background: transparent !important; 
+        }
+        .flatpickr-prev-month svg,
+        .flatpickr-next-month svg {
+            fill: #f3f4f6; 
+        }
+        .flatpickr-prev-month:hover svg,
+        .flatpickr-next-month:hover svg {
+            fill: #111827; 
+        }
+        .flatpickr-monthDropdown-months {
+            background: #f3f4f6; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+            border: 1px solid #f3f4f6; 
+            padding: 4px; 
+        }
+        .flatpickr-monthDropdown-month {
+            font-size: 14px; 
+            color: #374151; 
+            border-radius: 6px; 
+            padding: 4px 8px; 
+        }
+        .flatpickr-monthDropdown-month:hover,
+        .flatpickr-monthDropdown-month.selected {
+            background: #f3f4f6; 
+        }
+        .checklist-table th {
+            padding: 0.5rem;
+            background-color: #f9fafb;
+            text-align: left;
+            font-size: 0.875rem;
+            vertical-align: top;
+        }
+        .checklist-table td {
+            padding: 0.75rem 0.5rem;
+            border-top: 1px solid #e5e7eb;
+            font-size: 0.875rem;
+            color: #374151;
+            vertical-align: top;
+        }
+        .checklist-table .checkbox-col {
+            width: 3rem;
+            text-align: center;
+        }
+        .checklist-table .indent-1 {
+            padding-left: 1.5rem;
+            margin-top: 0.25rem;
+        }
+        
+        .choices {
+            margin-top: 0.3rem;
+        }
+        .choices__inner {
+            min-height: 42px !important;
+            padding: 0.5rem 0.75rem !important; 
+            line-height: 1.5 !important;
+            border-radius: 0.5rem !important;
+            border: 1px solid #D1D5DB !important;
+            background-color: #fff !important; 
+            font-size: 1rem !important;
+        }
+        
+        .is-focused .choices__inner {
+            border: 1px solid #3B82F6 !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+        
+        .choices__list--single {
+            padding: 0 !important;
+            white-space: normal !important; 
+            word-break: break-word; 
+        }
+        .choices__list--dropdown .choices__item--choice {
+            white-space: normal !important;
+            word-break: break-word;
+            font-size: 0.9rem; 
+        }
+        .section-title {
+            background-color: #f8f9fa;
+            padding: 12px 15px;
+            margin: 20px 0 15px 0;
+            font-weight: bold;
+            border-left: 4px solid #979797;
+            color: #333;
+        }
+        #form-section-4 table {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 0 20px 0;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            table-layout: fixed;
+        }
+        #form-section-4 .section-title + table {
+            margin-top: 10px !important; 
+        }
+        #form-section-4 thead th {
+            text-align: center;
+            padding: 15px;
+            background-color: #979797;
+            color: rgb(255, 255, 255);
+            border: none;
+            font-weight: 300;
+            font-size: 14px;
+            word-wrap: break-word;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+            max-width: 0;
+        }
+        #form-section-4 thead th:nth-child(2) {
+            text-align: left;
+            padding-left: 15px;
+        }
+        #form-section-4 table thead:first-child th:nth-child(2) {
+            text-align: center; 
+        }
+        #form-section-4 tbody td {
+            padding: 12px 15px;
+            border: 1px solid #dee2e6;
+            vertical-align: middle;
+            word-wrap: break-word;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+            max-width: 0;
+            font-size: 14px;
+        }
+        #form-section-4 tbody tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+        #form-section-4 .checkbox-col,
+        #form-section-4 .checkbox-cell {
+            width: 60px;
+            min-width: 60px;
+            max-width: 60px;
+            text-align: center;
+            vertical-align: middle;
+            padding: 12px 5px;
+        }
+        #form-section-4 .checkbox-col input[type="checkbox"],
+        #form-section-4 .checkbox-cell input[type="checkbox"] {
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            margin: 0 auto;
+            display: inline-block;
+            vertical-align: middle;
+            border: 2px solid #acacac;
+            border-radius: 4px;
+            position: relative;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        #form-section-4 .checkbox-col input[type="checkbox"]:hover,
+        #form-section-4 .checkbox-cell input[type="checkbox"]:hover {
+            border-color: #acacac;
+            transform: scale(1.00);
+        }
+        #form-section-4 .checkbox-col input[type="checkbox"]:checked,
+        #form-section-4 .checkbox-cell input[type="checkbox"]:checked {
+            background: #acacac;
+            border-color: #acacac;
+            box-shadow: 0 3px 8px rgba(255, 255, 255, 0.4);
+        }
+        #form-section-4 .checkbox-col input[type="checkbox"]:checked::after,
+        #form-section-4 .checkbox-cell input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        #form-section-4 tbody tr:hover {
+            background-color: #f1f0f8;
+            transition: background-color 0.3s ease;
+        }
+        #form-section-4 tbody tr {
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.2s ease;
+        }
+        #form-section-4 tbody tr:active {
+            background-color: #d1e7ff;
+        }
+        #form-section-4 .indent-1 {
+            margin-left: 20px;
+            display: block;
+        }
+        .popup-overlay {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          z-index: 9998;
+          animation: fadeIn 0.3s ease;
+        }
+        .popup-container {
+          display: none;
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: white;
+          padding: 2rem;
+          border-radius: 1rem;
+          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+          z-index: 9999;
+          max-width: 500px;
+          width: 90%;
+          animation: slideIn 0.3s ease;
+        }
+        .popup-container.show,
+        .popup-overlay.show {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+
+    <div id="loading" class="text-center p-8 space-y-4">
+        <div class="loader"></div> 
+        <p class="text-lg font-semibold text-gray-600">Loading</p> 
+    </div>
+    
+    <form id="funding-form" class="hidden w-[80%] max-w-4xl mx-auto bg-white p-6 sm:p-8 rounded-xl shadow-2xl space-y-8">
+        
+        <header>
+            <h1 class="text-3xl font-extrabold text-blue-800 text-center">
+                แบบบันทึกขอรับการสนับสนุนทุน
+            </h1>
+        </header>
+
+        <div id="form-section-1" class="space-y-4 p-4 border border-gray-200 rounded-lg">
+            <h2 class="text-xl font-bold text-gray-700">1. ข้อมูลผู้ขอรับทุน</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                
+                <div class="md:col-span-2">
+                    <label for="name" class="block text-sm font-medium text-gray-700">ชื่อ-นามสกุล</label>
+                    <div class="relative mt-1"> 
+                        <input type="text" id="name" name="name" required
+                                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]">
+                        <button type="button" id="clear-name-btn" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
+                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700">คณะมนุษยศาสตร์ ภาควิชา</label>
+                    <span id="department-display" 
+                            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2 border pr-10 min-h-[42px]" disabled>
+                    </span>
+                    <input type="hidden" id="department" name="department">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">เบอร์โทร</label>
+                    <span id="phone-display" 
+                            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2 border pr-10 min-h-[42px]" disabled>
+                    </span>
+                        <input type="hidden" id="phone" name="phone">
+                </div>
+
+                <div>
+                    <label for="record_date" class="block text-sm font-medium text-gray-700">วันที่บันทึก</label>
+                    <div class="relative mt-1" id="record_date_wrapper">
+                        <input type="text" id="record_date" name="record_date" required placeholder="คลิกไอคอนเพื่อเลือกวันที่"
+                                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]" 
+                                data-input readonly>
+                        <a class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer" data-toggle>
+                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="doc_number_prefix" class="block text-sm font-medium text-gray-700">ที่ อว 0603.03.</label>
+                    <select id="doc_number_prefix" name="doc_number_prefix" required disabled class="mt-1 block w-full">
+                        <option value="" selected disabled></option>
+                        <option value="02">02</option>
+                        <option value="03">03</option>
+                        <option value="04">04</option>
+                        <option value="05">05</option>
+                        <option value="06">06</option>
+                        <option value="07">07</option>
+                        <option value="08">08</option>
+                        <option value="01(....)">01(....)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div id="form-section-2" class="space-y-4 p-4 border border-gray-200 rounded-lg">
+            <h2 class="text-xl font-bold text-gray-700">2. ข้อมูลบทความที่ได้รับตีพิมพ์</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                <div class="md:col-span-2">
+                    <label for="article_title" class="block text-sm font-medium text-gray-700">ชื่อบทความที่ได้รับตีพิมพ์</label>
+                    <div class="relative mt-1">
+                        <input type="text" id="article_title" name="article_title" required
+                                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]">
+                        <button type="button" id="clear-article_title-btn" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
+                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <label for="article_type" class="block text-sm font-medium text-gray-700">ประเภทบทความ</label>
+                    <select id="article_type" name="article_type" required class="mt-1 block w-full">
+                        <option value="" selected disabled>-- เลือก --</option>
+                        <option>บทความวิจัย</option>
+                        <option>บทความวิจัยสร้างสรรค์</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="journal_name" class="block text-sm font-medium text-gray-700">ชื่อวารสาร</label>
+                    <div class="relative mt-1">
+                        <input type="text" id="journal_name" name="journal_name" required
+                                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]">
+                        <button type="button" id="clear-journal_name-btn" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
+                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="publish_date" class="block text-sm font-medium text-gray-700">วันที่เผยแพร่</label>
+                    <div class="relative mt-1" id="publish_date_wrapper">
+                        <input type="text" id="publish_date" name="publish_date" required placeholder="คลิกไอคอนเพื่อเลือกวันที่"
+                                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]" 
+                                data-input readonly>
+                        <a class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer" data-toggle>
+                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="publish_pages" class="block text-sm font-medium text-gray-700">หน้าที่ตีพิมพ์</label>
+                    <div class="relative mt-1">
+                        <input type="text" id="publish_pages" name="publish_pages"
+                                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]">
+                        <button type="button" id="clear-publish_pages-btn" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
+                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="md:col-span-2">
+                    <label for="database_source" class="block text-sm font-medium text-gray-700">ฐานข้อมูล</label>
+                    <select id="database_source" name="database_source" required class="mt-1 block w-full">
+                        <option value="" selected disabled>-- เลือก --</option>
+                        <option>วารสารระดับชาติ (TCI กลุ่ม 1)</option>
+                        <option>วารสารระดับนานาชาติ (Quartile 1)</option>
+                        <option>วารสารระดับนานาชาติ (Quartile 2)</option>
+                        <option>วารสารระดับนานาชาติ (Quartile 3)</option>
+                        <option>วารสารระดับนานาชาติ (Quartile 4)</option>
+                        <option>วารสารระดับนานาชาติ (อยู่ในฐานข้อมูลที่ กพอ.ยอมรับ (โปรดระบุชื่อฐานข้อมูล))</option>
+                    </select>
+                </div>
+
+                <div class="md:col-span-2">
+                    <label for="funding_source" class="block text-sm font-medium text-gray-700">โครงการวิจัยจาก</label>
+                    <select id="funding_source" name="funding_source" required class="mt-1 block w-full">
+                        <option value="" selected disabled>-- เลือก --</option>
+                        <option>คณะมนุษยศาสตร์ มหาวิทยาลัยนเรศวร โดยใช้งบประมาณส่วนตัวเพื่อกำหนดภาระงาน</option>
+                        <option>งบประมาณรายได้มหาวิทยาลัยนเรศวร</option>
+                        <option>แหล่งทุนวิจัยภายนอก</option>
+                        <option>งบประมาณรายได้คณะมนุษยศาสตร์ มหาวิทยาลัยนเรศวร</option>
+                    </select>
+                    
+                    <p id="funding_source_helper" class="text-xs text-red-600 mt-1"></p>
+
+                    <div id="dynamic_fields_container" class="hidden pl-8">
+                        <div class="grid grid-cols-3 gap-x-6">
+                            <div id="external_source_wrapper" class="hidden"> 
+                                <label for="external_source" class="block text-sm font-medium text-gray-700">แหล่งทุน</label>
+                                <div class="relative mt-1">
+                                     <input type="text" id="external_source" name="external_source" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]">
+                                    <button type="button" id="clear-external_source-btn" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
+                                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="funding_year_wrapper" class="hidden"> 
+                                <label for="funding_year" class="block text-sm font-medium text-gray-700">ปีงบประมาณ</label>
+                                <div class="relative mt-1">
+                                     <input type="text" id="funding_year" name="funding_year" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]">
+                                    <button type="button" id="clear-funding_year-btn" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
+                                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-2">
+                    <label for="project_title" class="block text-sm font-medium text-gray-700">โครงการวิจัยเรื่อง</label>
+                    <div class="relative mt-1">
+                        <input type="text" id="project_title" name="project_title"
+                                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]">
+                        <button type="button" id="clear-project_title-btn" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
+                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="form-section-3" class="space-y-4 p-4 border border-gray-200 rounded-lg">
+            <h2 class="text-xl font-bold text-gray-700">3. ใบสำคัญรับเงิน</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">ชื่อ-นามสกุล</label>
+                    <span id="receipt_name_display" class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2 min-h-[42px] text-gray-700"></span>
+                </div>
+
+                <div>
+                    <label for="address" class="block text-sm font-medium text-gray-700">ที่อยู่</label>
+                    <div class="relative mt-1">
+                        <input type="text" id="address" name="address" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]">
+                        <button type="button" id="clear-address-btn" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
+                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="district" class="block text-sm font-medium text-gray-700">ตำบล</label>
+                    <div class="relative mt-1">
+                        <input type="text" id="district" name="district" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]">
+                        <button type="button" id="clear-district-btn" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
+                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="amphoe" class="block text-sm font-medium text-gray-700">อำเภอ</label>
+                    <div class="relative mt-1">
+                        <input type="text" id="amphoe" name="amphoe" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]">
+                        <button type="button" id="clear-amphoe-btn" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
+                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="province" class="block text-sm font-medium text-gray-700">จังหวัด</label>
+                    <div class="relative mt-1">
+                        <input type="text" id="province" name="province" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]">
+                        <button type="button" id="clear-province-btn" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
+                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="md:col-span-2 flex items-end">
+                    <p class="text-sm font-medium text-gray-700">ได้รับเงินจากมหาวิทยาลัยนเรศวร ดังมีรายการดังต่อไปนี้</p>
+                </div>
+
+                <div class="md:col-span-2">
+                    <label for="dropdown6" class="block text-sm font-medium text-gray-700">
+                        1. ทุนสนับสนุนค่าบทความวิจัย
+                        <span class="float-right font-normal text-gray-500">จำนวน 1 หน่วย</span>
+                    </label>
+                    <select id="dropdown6" name="dropdown6" class="mt-1 block w-full">
+                        <option value="" selected disabled>-- เลือก --</option>
+                        <option value="ค่าแปล (ไม่เชี่ยวชาญ)">ค่าแปลบทความที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ปรากฏในฐานข้อมูลการจัดอันดับวารสาร SJR/ฐานข้อมูล ISI/Scopus หรือวารสารวิชาการเป็นที่ยอมรับตามประกาศ ก.พ.อ. และเป็นภาษาที่ไม่ตรงกับความเชี่ยวชาญของผู้ขอรับทุน  </option>
+                        <option value="ค่าตรวจสอบ (เชี่ยวชาญ)">ค่าตรวจสอบภาษาบทความที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ปรากฏในฐานข้อมูลการจัดอันดับวารสาร SJR/ฐานข้อมูล ISI/Scopus หรือวารสารวิชาการเป็นที่ยอมรับตามประกาศ ก.พ.อ. และเป็นภาษาที่ตรงกับความเชี่ยวชาญของผู้ขอรับทุน </option>
+                        <option value="TCI กลุ่ม 1">เงินรางวัลตีพิมพ์สำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับชาติ ฐานข้อมูล Thai-Journal Citation Index (TCI) กลุ่ม 1</option>
+                        <option value="TCI กลุ่ม 1 (มีทุน)">เงินรางวัลตีพิมพ์สำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับชาติ ฐานข้อมูล Thai-Journal Citation Index (TCI) กลุ่ม 1 และทุนสนับสนุนค่าใช้จ่ายการตีพิมพ์</option>
+                        <option value="Quartile 1">เงินรางวัลสมทบสำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ปรากฏในฐานข้อมูลของการจัดอันดับวารสาร SCImago Journal Rank (SJR) หรือ ฐานข้อมูล ISI Web of Science, Scopus มีค่า Quartile 1</option>
+                        <option value="Quartile 2">เงินรางวัลสมทบสำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ปรากฏในฐานข้อมูลของการจัดอันดับวารสาร SCImago Journal Rank (SJR) หรือ ฐานข้อมูล ISI Web of Science, Scopus มีค่า Quartile 2</option>
+                        <option value="Quartile 3-4">เงินรางวัลสมทบสำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ปรากฏในฐานข้อมูลของการจัดอันดับวารสาร SCImago Journal Rank (SJR) หรือ ฐานข้อมูล ISI Web of Science, Scopus มีค่า Quartile 3-4 </option>
+                        <option value="Quartile 3-4 (มีสมทบ)">เงินรางวัลสำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ปรากฏในฐานข้อมูลของการจัดอันดับวารสาร SJR หรือ ฐานข้อมูล ISI มีค่า Quartile 3-4  และเงินรางวัลสมทบ </option>
+                        <option value="Scopus (ไม่มี Quartile)">เงินรางวัลตีพิมพ์สำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ไม่ปรากฏในฐานข้อมูลของการจัดอันดับวารสาร SJR / ฐานข้อมูล ISI แต่ปรากฏในฐานข้อมูล Scopus หรือ วารสารวิชาการที่ ก.พ.อ. ให้การยอมรับ </option>
+                        <option value="Quartile 3-4 (ซ้ำ)">เงินรางวัลสำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ปรากฏในฐานข้อมูลของการจัดอันดับวารสาร SJR หรือ ฐานข้อมูล ISI มีค่า Quartile 3-4 </option>
+                    </select>
+                </div>
+
+                <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                    <div>
+                        <label for="dropdown7" class="block text-sm font-medium text-gray-700">หน่วยละ (บาท)</label>
+                        <select id="dropdown7" name="dropdown7" class="mt-1 block w-full">
+                            <option value="" selected disabled>-- เลือก --</option>
+                            <option value="2000">2,000</option>
+                            <option value="3000">3,000</option>
+                            <option value="5000">5,000</option>
+                            <option value="7000">7,000</option>
+                            <option value="10000">10,000</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="text3_total" class="block text-sm font-medium text-gray-700">รวม (บาท)</label>
+                        <input type="text" id="text3_total" name="text3_total" class="block w-full rounded-lg border-gray-300 shadow-sm p-2 border min-h-[42px]" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="form-section-4" class="space-y-4 p-4 border border-gray-200 rounded-lg">
+            <h2 class="text-xl font-bold text-gray-700">4. แบบตรวจสอบความครบถ้วน</h2>
+            <div class="section-title">รายการตรวจสอบ</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="checkbox-col">✓</th>
+                        <th>รายการ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="checkbox-col"><input type="checkbox" id="box1.1"></td>
+                        <td>1.เป็นบุคลากรคณะมนุษยศาสตร์</td>
+                    </tr>
+                    <tr>
+                        <td class="checkbox-col"><input type="checkbox" id="box1.2"></td>
+                        <td>2.ไม่เป็นผู้ลาศึกษาต่อ ลาทำวิจัยหลังปริญญาเอก รวมถึงการลาไปปฏิบัติราชการเพื่อเพิ่มพูนความรู้ทางวิชาการทั้งภายในและต่างประเทศ</td>
+                    </tr>
+                    <tr>
+                        <td class="checkbox-col"><input type="checkbox" id="box1.3"></td>
+                        <td>3.ผู้ขอรับทุนสนับสนุนค่าตีพิมพ์ ค่าแปล ค่าตรวจสอบภาษาและ เงินรางวัลตีพิมพ์ ต้องเป็นผู้เขียนชื่อแรก (First Author) หรือเป็นชื่อหลัก (Corresponding Author) ที่ระบุชื่อหน่วยงานของมหาวิทยาลัยไว้ที่ตำแหน่งที่อยู่ของผู้เขียนปรากฎในบทความอย่างชัดเจน โดยให้สิทธิ์ผู้เขียนชื่อแรกเป็นผู้ขอรับทุนก่อน</td>
+                    </tr>
+                    <tr>
+                        <td class="checkbox-col"><input type="checkbox" id="box1.4"></td>
+                        <td>4.ผู้มีชื่อในผลงานมีสิทธิ์ขอรับทุนสนับสนุนค่าตีพิมพ์ ค่าแปล ค่าตรวจสอบภาษาและ เงินรางวัลตีพิมพ์ได้เพียง 1 คน ต่อ1 ผลงานตีพิมพ์ เท่านั้น และต้องเป็นผลงานที่ไม่เคยได้รับการสนับสนุนค่าตีพิมพ์ และรางวัลตีพิมพ์จากที่ใดมาก่อน</td>
+                    </tr>
+                    <tr>
+                        <td class="checkbox-col"><input type="checkbox" id="box1.5"></td>
+                        <td>5.ผลงานที่ขอรับทุนสนับสนุนต้องเป็นผลงานที่ทำการศึกษา ค้นคว้า และวิจัยด้วยตนเอง หรือมีส่วนร่วมในการวิจัยนั้น ทั้งนี้ผลงานดังกล่าวต้องไม่เป็นส่วนหนึ่งของการขอจบการศึกษาเพื่อปริญญาของผู้ขอรับทุนสนับสนุน</td>
+                    </tr>
+                    <tr>
+                        <td class="checkbox-col"><input type="checkbox" id="box1.6"></td>
+                        <td>6.เป็นผลงานวิจัยที่ไม่ได้รับทุนสนับสนุนจากคณะมนุษยศาสตร์ มหาวิทยาลัยนเรศวร (นับตั้งแต่ปีงบประมาณ 2568 เป็นต้นไป)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="section-title">รายการเอกสารประกอบการยื่นขอรับทุน</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="checkbox-col">✓</th>
+                        <th>รายการ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="checkbox-col"><input type="checkbox" id="box2.1"></td>
+                        <td>1. บันทึกขออนุมัติทุนสนับสนุนด้านการวิจัย</td>
+                    </tr>
+                    <tr>
+                        <td class="checkbox-col"><input type="checkbox" id="box2.2"></td>
+                        <td>2. ใบสำคัญรับเงิน</td>
+                    </tr>
+                    <tr>
+                        <td class="checkbox-col"><input type="checkbox" id="box2.3"></td>
+                        <td>3. Reprint ที่ระบุชื่อวารสารและ Issue (รับรองสำเนาถูกต้อง)</td>
+                    </tr>
+                    <tr>
+                        <td class="checkbox-col"><input type="checkbox" id="box2.4"></td>
+                        <td>4. หลักฐานการตรวจสอบข้อมูลวารสาร (รับรองสำเนาถูกต้อง)</td>
+                    </tr>
+                </tbody>
+                <thead>
+                    <tr>
+                        <th class="checkbox-col"> </th>
+                        <th>เอกสารเพิ่มเติมกรณีขอค่าตีพิมพ์บทความ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="checkbox-col"><input type="checkbox" id="box3.1"></td>
+                        <td>- Invoice หรือหลักฐานแสดงค่าตีพิมพ์ที่วารสารเรียกเก็บ </td>
+                    </tr>
+                    <tr>
+                        <td class="checkbox-col"><input type="checkbox" id="box3.2"></td>
+                        <td>- Receipt หรือหลักฐานแสดงการจ่ายค่าตีพิมพ์ที่ระบุทั้งค่าตีพิมพ์สกุลเงินที่วารสารเรียกเก็บและสกุลเงินไทย </td>
+                    </tr>
+                </tbody>
+                <thead>
+                    <tr>
+                        <th class="checkbox-col"> </th>
+                        <th>เอกสารเพิ่มกรณีขอค่าแปลหรือค่าตรวจสอบภาษา</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="checkbox-col"><input type="checkbox" id="box4.1"></td>
+                        <td>- บันทึกอนุมัติในหลักการให้ดำเนินการจ้างแปลหรือตรวจสอบภาษา (แนบบทความก่อนจ้างแปลหรือตรวจสอบภาษา ประวัติผู้แปลหรือตรวจสอบภาษา และรายละเอียดวารสารที่จะลงตีพิมพ์) </td>
+                    </tr>
+                    <tr>
+                        <td class="checkbox-col"><input type="checkbox" id="box4.2"></td>
+                        <td>- ใบเสร็จค่าจ้างแปลหรือจ้างตรวจสอบภาษา (กรณีไม่ใช่ใบเสร็จ ให้ใช้ใบสำคัญรับเงินและสำเนาบัตรประชาชนผู้รับจ้าง) </td>
+                    </tr>
+                </tbody>
+                <thead>
+                    <tr>
+                        <th class="checkbox-col"> </th>
+                        <th>เอกสารเพิ่มเติมกรณีขอเงินรางวัลสมทบ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="checkbox-col"><input type="checkbox" id="box5.1"></td>
+                        <td>- สำเนาเอกสารผลการพิจารณาการได้รับทุนสนับสนุนค่าตีพิมพ์ของมหาวิทยาลัย (บันทึกขอรับเงินรางวัลที่ได้รับการอนุมัติจากมหาวิทยาลัย) </td>
+                    </tr>
+                </tbody>
+                <thead>
+                    <tr>
+                        <th class="checkbox-col"> </th>
+                        <th>เอกสารเพิ่มเติมกรณีผลงานที่อยู่ใน Quartile 3 – 4 ไม่ได้รับการสนับสนุนจากมหาวิทยาลัยเนื่องจากกรอบงบประมาณของมหาวิทยาลัยจำกัด</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="checkbox-col"><input type="checkbox" id="box6.1"></td>
+                        <td>- บันทึกแจ้งจากมหาวิทยาลัย หรือหลักฐานแสดงการไม่ได้รับอนุมัติทุน </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="submit-button-container" class="flex flex-col items-end pt-4">
+            <button type="submit" id="save-btn" class="px-8 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 font-semibold shadow-md transition duration-150 text-lg">
+                ส่งข้อมูลและบันทึก
+            </button>
+            <div id="save-message" class="mt-4 text-center hidden font-semibold"></div>
+        </div>
+
+        <div id="popup-overlay" class="popup-overlay"></div>
+
+    <div id="success-popup" class="popup-container text-center">
+        <svg class="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+    
+        <h3 class="text-2xl font-bold text-gray-800 mb-3">บันทึกข้อมูลสำเร็จ!</h3>
+        <p class="text-gray-600 mb-8">ข้อมูลของคุณถูกส่งและบันทึกลงในชีตเรียบร้อยแล้ว</p>
+    
+        <div class="space-y-3">
+            <button type="button" id="popup-download-btn" 
+                    class="w-full px-6 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 font-semibold shadow-md transition duration-150 text-lg">
+                ดาวน์โหลดไฟล์ Word (.docx)
+            </button>
+        
+            <button type="button" id="popup-close-btn" 
+                    class="w-full px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium transition duration-150">
+                X
+            </button>
+        </div>
+    </div>
+    </form>
+
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script src="bahttext.js"></script> 
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/pizzip@3.2.0/dist/pizzip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.42.3/docxtemplater.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+<script>
+    let allData = [];
+    let recordDatePicker;
+    let publishDatePicker;
+
+    let sec1, sec2, sec3, sec4, submitContainer;
+    let choicesDocPrefix, choicesArticleType, choicesDatabase, choicesFunding, choicesDropdown6, choicesDropdown7;
+
+    function formatDateToThai(dateString) {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        const thaiYear = date.getFullYear() + 543;
+        const thaiMonths = [
+            "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+            "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+        ];
+        return `${date.getDate()} ${thaiMonths[date.getMonth()]} ${thaiYear}`;
+    }
+
+    function getSelectedText(elementId) {
+        const select = document.getElementById(elementId);
+        if (!select || select.selectedIndex <= 0) return '';
+        return select.options[select.selectedIndex].text;
+    }
+
+    function showSuccessPopup() {
+        document.getElementById('popup-overlay').classList.add('show');
+        document.getElementById('success-popup').classList.add('show');
+    }
+
+    function closePopup() {
+        document.getElementById('popup-overlay').classList.remove('show');
+        document.getElementById('success-popup').classList.remove('show');
+        resetForm();
+    }
+
+    function resetForm() {
+        document.getElementById('funding-form').reset();
+        document.getElementById('department-display').textContent = ''; 
+        document.getElementById('phone').value = '';
+        document.getElementById('phone-display').textContent = '';
+        document.getElementById('clear-name-btn').classList.add('hidden'); 
+        document.getElementById('receipt_name_display').textContent = '';
+        document.getElementById('text3_total').value = '';
+        
+        recordDatePicker.setDate("today", true); 
+        publishDatePicker.clear(); 
+
+        handleFundingSourceChange();
+        
+        if (choicesDocPrefix) { choicesDocPrefix.setChoiceByValue(''); choicesDocPrefix.disable(); }
+        if (choicesArticleType) choicesArticleType.setChoiceByValue('');
+        if (choicesDatabase) choicesDatabase.setChoiceByValue('');
+        if (choicesFunding) choicesFunding.setChoiceByValue('');
+        if (choicesDropdown6) choicesDropdown6.setChoiceByValue('');
+        if (choicesDropdown7) choicesDropdown7.setChoiceByValue('');
+        
+        document.querySelectorAll('#form-section-4 input[type="checkbox"]').forEach(cb => cb.checked = false);
+        
+        updateFormVisibility(false);
+        sec1.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    async function fetchData() {
+        try {
+            const response = await fetch('/api/read-sheet');
+            const data = await response.json();
+            
+            if (data && data.length > 0) {
+                allData = data;
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('funding-form').classList.remove('hidden');
+            } else {
+                document.getElementById('loading').innerHTML = '<p class="text-red-500">ไม่พบข้อมูลบุคลากรในชีต</p>';
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            document.getElementById('loading').innerHTML = '<p class="text-red-500">เกิดข้อผิดพลาดในการดึงข้อมูล</p>';
+        }
+    }
+
+    function getDocPrefix(departmentName) {
+        if (!departmentName) return "";
+        if (departmentName.includes("ดนตรี")) return "02";
+        if (departmentName.includes("ภาษาไทย")) return "03";
+        if (departmentName.includes("ภาษาอังกฤษ")) return "04";
+        if (departmentName.includes("ภาษาตะวันตก")) return "05";
+        if (departmentName.includes("ศิลปะการแสดง")) return "06";
+        if (departmentName.includes("ภาษาตะวันออก")) return "07";
+        if (departmentName.includes("ภาษาศาสตร์")) return "08";
+        if (departmentName.includes("สำนักงานเลขานุการ")) return "01(....)";
+        return ""; 
+    }
+    
+    function autofillData() {
+        const nameInput = document.getElementById('name');
+        const selectedName = nameInput.value.trim();
+        
+        const departmentDisplay = document.getElementById('department-display');
+        const departmentHiddenInput = document.getElementById('department');
+        const clearBtn = document.getElementById('clear-name-btn'); 
+        const docPrefixSelect = document.getElementById('doc_number_prefix');
+        const phoneInput = document.getElementById('phone'); 
+        const phoneDisplay = document.getElementById('phone-display');
+        const receiptNameDisplay = document.getElementById('receipt_name_display'); 
+
+        if (nameInput.value.length > 0) {
+            clearBtn.classList.remove('hidden');
+        } else {
+            clearBtn.classList.add('hidden');
+        }
+
+        const matchedRow = allData.find(row => {
+            const nameInData = row['ชื่อ - นามสกุล'] || '';
+            return nameInData.trim() === selectedName;
+        });
+        
+        if (matchedRow) {
+            const departmentName = matchedRow['ภาควิชา'] || '';
+            const phoneNumber = matchedRow['เบอร์โทร'] || ''; 
+            
+            departmentDisplay.textContent = departmentName;
+            departmentHiddenInput.value = departmentName;
+            phoneInput.value = phoneNumber; 
+            phoneDisplay.textContent = phoneNumber;
+            receiptNameDisplay.textContent = selectedName; 
+            
+            const prefix = getDocPrefix(departmentName); 
+            docPrefixSelect.value = prefix; 
+            if(choicesDocPrefix) choicesDocPrefix.setChoiceByValue(prefix || "");
+
+        } else {
+            departmentDisplay.textContent = '';
+            departmentHiddenInput.value = '';
+            phoneInput.value = ''; 
+            phoneDisplay.textContent = '';
+            receiptNameDisplay.textContent = ''; 
+            docPrefixSelect.value = ""; 
+            if(choicesDocPrefix) choicesDocPrefix.setChoiceByValue("");
+        }
+
+        updateFormVisibility(true);
+    }
+
+    function clearNameInput() {
+        document.getElementById('name').value = '';
+        document.getElementById('department-display').textContent = '';
+        document.getElementById('department').value = '';
+        document.getElementById('phone').value = ''; 
+        document.getElementById('phone-display').textContent = '';
+        document.getElementById('receipt_name_display').textContent = ''; 
+        document.getElementById('clear-name-btn').classList.add('hidden');
+        document.getElementById('name').focus(); 
+        document.getElementById('doc_number_prefix').value = "";
+        
+        if(choicesDocPrefix) choicesDocPrefix.setChoiceByValue("");
+
+        updateFormVisibility(false);
+    }
+
+    function handleFundingSourceChange() {
+        const fundingSource = document.getElementById('funding_source').value;
+        const container = document.getElementById('dynamic_fields_container');
+        const externalWrapper = document.getElementById('external_source_wrapper');
+        const yearWrapper = document.getElementById('funding_year_wrapper');
+        const helper = document.getElementById('funding_source_helper'); 
+
+        container.classList.add('hidden');
+        externalWrapper.className = 'hidden'; 
+        yearWrapper.className = 'hidden';     
+        helper.textContent = '';               
+        
+        document.getElementById('external_source').value = '';
+        document.getElementById('funding_year').value = '';
+
+        if (fundingSource === "งบประมาณรายได้มหาวิทยาลัยนเรศวร") {
+            container.classList.remove('hidden');
+            yearWrapper.className = 'block col-span-2'; 
+            helper.textContent = 'โปรดระบุปีงบประมาณ';
+        } 
+        else if (fundingSource.includes("แหล่งทุนวิจัยภายนอก")) {
+            container.classList.remove('hidden');
+            externalWrapper.className = 'block col-span-2';
+            yearWrapper.className = 'block col-span-1';
+            helper.textContent = 'โปรดระบุรายชื่อแหล่งทุน และปีงบประมาณที่ได้รับทุน';
+        } 
+        else if (fundingSource.includes("งบประมาณรายได้คณะมนุษยศาสตร์")) {
+            container.classList.remove('hidden');
+            yearWrapper.className = 'block col-span-2';
+            helper.textContent = 'โปรดระบุปีที่ได้รับทุน ก่อนปีงบประมาณ 2568';
+        }
+    }
+    
+    function updateTotal() {
+         const amount = document.getElementById('dropdown7').value;
+         document.getElementById('text3_total').value = amount ? new Intl.NumberFormat().format(amount) : '';
+         
+         updateFormVisibility(true); 
+    }
+
+    function setupClearableInput(inputId, isKeyField = false) {
+        const input = document.getElementById(inputId);
+        const button = document.getElementById(`clear-${inputId}-btn`);
+
+        if (!input || !button) return;
+
+        const toggleButton = () => {
+            if (input.value.length > 0) {
+                button.classList.remove('hidden');
+            } else {
+                button.classList.add('hidden');
+            }
+        };
+
+        input.addEventListener('input', () => {
+            toggleButton();
+            if (isKeyField) {
+                updateFormVisibility(true);
+            }
+        });
+
+        button.addEventListener('click', () => {
+            input.value = '';
+            toggleButton();
+            input.focus();
+            
+            updateFormVisibility(false); 
+        });
+
+        toggleButton();
+    }
+
+    function updateFormVisibility(scroll = false) {
+        const nameVal = document.getElementById('name').value.trim();
+        const deptVal = document.getElementById('department').value.trim();
+        const recordDateVal = document.getElementById('record_date').value;
+        const docPrefixVal = document.getElementById('doc_number_prefix').value;
+
+        const titleVal = document.getElementById('article_title').value.trim();
+        const articleTypeVal = document.getElementById('article_type').value;
+        const journalVal = document.getElementById('journal_name').value.trim();
+        const publishDateVal = document.getElementById('publish_date').value;
+        const databaseVal = document.getElementById('database_source').value;
+        const fundingVal = document.getElementById('funding_source').value;
+        const externalSourceVal = document.getElementById('external_source').value.trim();
+        const fundingYearVal = document.getElementById('funding_year').value.trim();
+        const projectTitleVal = document.getElementById('project_title').value.trim();
+
+        const addressVal = document.getElementById('address').value.trim();
+        const districtVal = document.getElementById('district').value.trim();
+        const amphoeVal = document.getElementById('amphoe').value.trim();
+        const provinceVal = document.getElementById('province').value.trim();
+        const grantTypeVal = document.getElementById('dropdown6').value;
+        const amountVal = document.getElementById('dropdown7').value;
+
+        sec2.classList.add('hidden');
+        sec3.classList.add('hidden');
+        sec4.classList.add('hidden');
+        submitContainer.classList.add('hidden');
+
+        sec2.classList.remove('was-scrolled');
+        sec3.classList.remove('was-scrolled');
+        sec4.classList.remove('was-scrolled');
+
+        if (nameVal === '' || deptVal === '' || recordDateVal === '' || docPrefixVal === '') {
+            return;
+        }
+
+        sec2.classList.remove('hidden');
+        if (scroll && !sec2.classList.contains('was-scrolled')) {
+            sec2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            sec2.classList.add('was-scrolled');
+        }
+
+        if (titleVal === '' || articleTypeVal === '' || journalVal === '' || publishDateVal === '' || databaseVal === '' || fundingVal === '' || projectTitleVal === '') {
+            return;
+        }
+
+        let fundingCheckPassed = false;
+        if (fundingVal === "งบประมาณรายได้มหาวิทยาลัยนเรศวร" || fundingVal.includes("งบประมาณรายได้คณะมนุษยศาสตร์")) {
+            if (fundingYearVal !== '') fundingCheckPassed = true;
+        } else if (fundingVal.includes("แหล่งทุนวิจัยภายนอก")) {
+                if (fundingYearVal !== '' && externalSourceVal !== '') fundingCheckPassed = true;
+        } else if (fundingVal.includes("งบประมาณส่วนตัว")) {
+                fundingCheckPassed = true;
+        }
+
+        if (!fundingCheckPassed) {
+            return;
+        }
+
+        sec3.classList.remove('hidden');
+        if (scroll && !sec3.classList.contains('was-scrolled')) {
+            sec3.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            sec3.classList.add('was-scrolled');
+        }
+
+        if (addressVal === '' || districtVal === '' || amphoeVal === '' || provinceVal === '' || grantTypeVal === '' || amountVal === '') {
+        return;
+        }
+
+        sec4.classList.remove('hidden');
+        submitContainer.classList.remove('hidden');
+        if (scroll && !sec4.classList.contains('was-scrolled')) {
+            sec4.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            sec4.classList.add('was-scrolled');
+        } 
+    }
+    
+    async function handleFormSubmit(event) {
+        event.preventDefault(); 
+        
+        const saveBtn = document.getElementById('save-btn');
+        const message = document.getElementById('save-message');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'กำลังบันทึก...';
+        message.classList.add('hidden');
+
+        const formData = new FormData(event.target);
+        
+        const docPrefixSelect = document.getElementById('doc_number_prefix');
+        const phoneInput = document.getElementById('phone');
+
+        docPrefixSelect.disabled = false;
+        phoneInput.disabled = false;
+        if (choicesDocPrefix) choicesDocPrefix.enable(); 
+
+        let finalDocNumber = formData.get('doc_number_prefix');
+        let phoneNumber = formData.get('phone'); 
+        
+        docPrefixSelect.disabled = true;
+        phoneInput.disabled = true;
+        if (choicesDocPrefix) choicesDocPrefix.disable();
+
+        const articleTypeText = getSelectedText('article_type');
+        const databaseSourceText = getSelectedText('database_source');
+        const fundingSourceText = getSelectedText('funding_source');
+        const dropdown6Text = getSelectedText('dropdown6');
+        
+        const totalAmount = document.getElementById('text3_total').value;
+
+        const dataToSave = [                 
+            formData.get('name'),
+            formData.get('department'),
+            formData.get('article_title'),
+            articleTypeText,
+            formData.get('publish_date'),
+            formData.get('journal_name'),
+            formData.get('publish_pages'),
+            databaseSourceText,
+            fundingSourceText,
+            formData.get('project_title'),
+            dropdown6Text,
+            totalAmount,
+            ''
+        ];
+        try {
+            const response = await fetch('/api/append-sheet', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ data: dataToSave }) 
+            });
+
+            if (!response.ok) {
+            // ถ้า Server ตอบ 404 (ไม่พบ) หรือ 500 (Server พัง)
+            throw new Error(`Server error: ${response.status} ${response.statusText}`);
+            }
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showSuccessPopup();
+            } else {
+                message.textContent = 'เกิดข้อผิดพลาด: ' + (result.error || 'Unknown error');
+                message.className = 'mt-4 text-center text-red-600 font-semibold';
+                message.classList.remove('hidden');
+            }
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            message.textContent = 'เกิดข้อผิดพลาดในการเชื่อมต่อ';
+            message.className = 'mt-4 text-center text-red-600 font-semibold';
+            message.classList.remove('hidden');
+        }
+        
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'ส่งข้อมูลและบันทึก';
+    }
+
+    // ▼▼▼ จุดที่ 2: แก้ไขฟังก์ชัน generateWord ให้ใช้ PizZip ▼▼▼
+    async function generateWord() {
+        const btn = document.getElementById('popup-download-btn');
+        const originalHTML = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<svg class="animate-spin h-5 w-5 text-white inline-block mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> กำลังสร้างไฟล์...';
+
+        try {
+            // 2.1 เปลี่ยนไปเช็ก PizZip แทน JSZip
+            if (typeof PizZip === 'undefined') throw new Error('ไม่พบ PizZip library');
+            if (typeof window.docxtemplater === 'undefined') throw new Error('ไม่พบ docxtemplater library');
+            if (typeof window.BAHTTEXT === 'undefined') throw new Error('ไม่พบ BAHTTEXT library');
+
+            const response = await fetch('template.docx');
+            if (!response.ok) {
+                throw new Error(`ไม่พบไฟล์ template.docx (HTTP ${response.status})`);
+            }
+            const content = await response.arrayBuffer();
+
+            // 2.2 เปลี่ยนไปสร้าง PizZip และใช้ .load() แทน .loadAsync()
+            const zip = new PizZip(content); 
+            const doc = new window.docxtemplater(zip, {
+                paragraphLoop: true,
+                linebreaks: true,
+            });
+
+            const amountValue = document.getElementById('dropdown7').value || '0';
+            const amountNum = parseInt(amountValue);
+            const amountInBaht = window.BAHTTEXT(amountNum); // ใช้ BAHTTEXT (ตัวใหญ่) ถูกแล้ว
+
+            const data = {
+                name: document.getElementById('name').value,
+                department: document.getElementById('department').value,
+                phone: document.getElementById('phone').value,
+                record_date_th: formatDateToThai(document.getElementById('record_date').value),
+                doc_prefix: document.getElementById('doc_number_prefix').value,
+
+                article_title: document.getElementById('article_title').value,
+                article_type_text: getSelectedText('article_type'),
+                journal_name: document.getElementById('journal_name').value,
+                publish_date_th: formatDateToThai(document.getElementById('publish_date').value),
+                publish_pages: document.getElementById('publish_pages').value || '-',
+                database_source_text: getSelectedText('database_source'),
+                funding_source_text: getSelectedText('funding_source'),
+                external_source: document.getElementById('external_source').value,
+                funding_year: document.getElementById('funding_year').value,
+                project_title: document.getElementById('project_title').value,
+
+                address: document.getElementById('address').value,
+                district: document.getElementById('district').value,
+                amphoe: document.getElementById('amphoe').value,
+                province: document.getElementById('province').value,
+                dropdown6_text: getSelectedText('dropdown6'),
+                dropdown7_value: new Intl.NumberFormat('th-TH').format(amountNum),
+                text3_total: document.getElementById('text3_total').value,
+                total_text_th: amountInBaht,
+
+                box1_1: document.getElementById('box1.1').checked ? '🗸' : ' ',
+                box1_2: document.getElementById('box1.2').checked ? '🗸' : ' ',
+                box1_3: document.getElementById('box1.3').checked ? '🗸' : ' ',
+                box1_4: document.getElementById('box1.4').checked ? '🗸' : ' ',
+                box1_5: document.getElementById('box1.5').checked ? '🗸' : ' ',
+                box1_6: document.getElementById('box1.6').checked ? '🗸' : ' ',
+                box2_1: document.getElementById('box2.1').checked ? '🗸' : ' ',
+                box2_2: document.getElementById('box2.2').checked ? '🗸' : ' ',
+                box2_3: document.getElementById('box2.3').checked ? '🗸' : ' ',
+                box2_4: document.getElementById('box2.4').checked ? '🗸' : ' ',
+                box3_1: document.getElementById('box3.1').checked ? '🗸' : ' ',
+                box3_2: document.getElementById('box3.2').checked ? '🗸' : ' ',
+                box4_1: document.getElementById('box4.1').checked ? '🗸' : ' ',
+                box4_2: document.getElementById('box4.2').checked ? '🗸' : ' ',
+                box5_1: document.getElementById('box5.1').checked ? '🗸' : ' ',
+                box6_1: document.getElementById('box6.1').checked ? '🗸' : ' ',
+            };
+
+            doc.render(data); 
+            
+            const out = doc.getZip().generate({
+                type: "blob",
+                mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            });
+            
+            const filename = `บันทึกขอรับทุน_${data.name || 'เอกสาร'}.docx`;
+            saveAs(out, filename);
+
+        } catch (error) {
+            console.error('Error generating Word doc:', error);
+            alert('เกิดข้อผิดพลาดในการสร้างไฟล์ Word:\n\n' + error.message);
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalHTML;
+        }
+    }
+    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchData(); 
+
+        recordDatePicker = flatpickr("#record_date_wrapper", {
+            wrap: true, 
+            locale: "th", 
+            dateFormat: "Y-m-d", 
+            defaultDate: "today",
+            clickOpens: false,
+            position: "auto right",
+            onChange: function(selectedDates, dateStr, instance) {
+                updateFormVisibility(true); 
+            }
+         });
+
+        publishDatePicker = flatpickr("#publish_date_wrapper", {
+            wrap: true, 
+            locale: "th",
+            dateFormat: "Y-m-d",
+            clickOpens: false,
+            position: "auto right",
+            onChange: function(selectedDates, dateStr, instance) {
+                updateFormVisibility(true); 
+            }
+        });
+
+        const choicesConfig = {
+            searchEnabled: false,
+            itemSelectText: '', 
+            shouldSort: false,
+            allowHTML: true, 
+        };
+        
+        choicesDocPrefix = new Choices(document.getElementById('doc_number_prefix'), choicesConfig);
+        choicesDocPrefix.disable();
+
+        choicesArticleType = new Choices(document.getElementById('article_type'), choicesConfig);
+        choicesDatabase = new Choices(document.getElementById('database_source'), choicesConfig);
+        choicesFunding = new Choices(document.getElementById('funding_source'), choicesConfig);
+        choicesDropdown6 = new Choices(document.getElementById('dropdown6'), choicesConfig);
+        choicesDropdown7 = new Choices(document.getElementById('dropdown7'), choicesConfig);
+
+        sec1 = document.getElementById('form-section-1');
+        sec2 = document.getElementById('form-section-2');
+        sec3 = document.getElementById('form-section-3');
+        sec4 = document.getElementById('form-section-4');
+        submitContainer = document.getElementById('submit-button-container');
+
+        document.getElementById('name').addEventListener('input', autofillData); 
+        document.getElementById('clear-name-btn').addEventListener('click', clearNameInput); 
+        
+        document.getElementById('article_type').addEventListener('change', () => updateFormVisibility(true));
+        document.getElementById('database_source').addEventListener('change', () => updateFormVisibility(true));
+        document.getElementById('dropdown6').addEventListener('change', () => updateFormVisibility(true));
+        document.getElementById('dropdown7').addEventListener('change', updateTotal); 
+
+        document.getElementById('funding-form').addEventListener('submit', handleFormSubmit);
+        document.getElementById('funding_source').addEventListener('change', () => {
+            handleFundingSourceChange();
+            updateFormVisibility(true); 
+        });
+
+        setupClearableInput('article_title', true); 
+        setupClearableInput('journal_name', true);
+        setupClearableInput('publish_pages', false);
+        setupClearableInput('project_title', true); 
+        setupClearableInput('address', true);
+        setupClearableInput('district', true);
+        setupClearableInput('amphoe', true);
+        setupClearableInput('province', true); 
+        setupClearableInput('external_source', true);
+        setupClearableInput('funding_year', true);
+
+        handleFundingSourceChange(); 
+        updateFormVisibility(false); 
+        
+        const rows = document.querySelectorAll('#form-section-4 tbody tr');
+        rows.forEach(row => {
+            row.addEventListener('click', function(e) {
+                 if (e.target.type === 'checkbox') return;
+                 const checkbox = row.querySelector('input[type="checkbox"]');
+                 if (checkbox) {
+                     checkbox.checked = !checkbox.checked;
+                 }
+            });
+        });
+
+        document.getElementById('popup-close-btn').addEventListener('click', closePopup);
+        document.getElementById('popup-overlay').addEventListener('click', closePopup);
+        document.getElementById('popup-download-btn').addEventListener('click', async () => {
+            await generateWord();
+            closePopup();
+        });
+    });
+</script>
+</body>
+</html>

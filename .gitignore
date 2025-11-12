@@ -1,0 +1,7 @@
+# ซ่อนโฟลเดอร์ node_modules
+node_modules/
+
+# ซ่อนไฟล์รหัสผ่านและ Key
+.env
+service-account-key.js
+service-account-key.json
