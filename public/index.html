@@ -594,7 +594,7 @@
                     </label>
                     <select id="dropdown6" name="dropdown6" class="mt-1 block w-full">
                         <option value="" selected disabled>-- เลือก --</option>
-                        <option value="ค่าแปล (ไม่เชี่ยวชาญ)">ค่าแปลบทความที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ปรากฏในฐานข้อมูลการจัดอันดับวารสาร SJR/ฐานข้อมูล ISI/Scopus หรือวารสารวิชาการเป็นที่ยอมรับตามประกาศ ก.พ.อ. และเป็นภาษาที่ไม่ตรงกับความเชี่ยวชาญของผู้ขอรับทุน  </option>
+                        <option value="ค่าแปล (ไม่เชี่ยวชาญ)">ค่าแปลบทความที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ปรากฏในฐานข้อมูลการจัดอันดับวารสาร SJR/ฐานข้อมูล ISI/Scopus หรือวารสารวิชาการเป็นที่ยอมรับตามประกาศ ก.พ.อ. และเป็นภาษาที่ไม่ตรงกับความเชี่ยวชาญของผู้ขอรับทุน </option>
                         <option value="ค่าตรวจสอบ (เชี่ยวชาญ)">ค่าตรวจสอบภาษาบทความที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ปรากฏในฐานข้อมูลการจัดอันดับวารสาร SJR/ฐานข้อมูล ISI/Scopus หรือวารสารวิชาการเป็นที่ยอมรับตามประกาศ ก.พ.อ. และเป็นภาษาที่ตรงกับความเชี่ยวชาญของผู้ขอรับทุน </option>
                         <option value="TCI กลุ่ม 1">เงินรางวัลตีพิมพ์สำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับชาติ ฐานข้อมูล Thai-Journal Citation Index (TCI) กลุ่ม 1</option>
                         <option value="TCI กลุ่ม 1 (มีทุน)">เงินรางวัลตีพิมพ์สำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับชาติ ฐานข้อมูล Thai-Journal Citation Index (TCI) กลุ่ม 1 และทุนสนับสนุนค่าใช้จ่ายการตีพิมพ์</option>
@@ -759,24 +759,25 @@
 
         <div id="popup-overlay" class="popup-overlay"></div>
 
-    <div id="success-popup" class="popup-container text-center">
-        <svg class="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+    <div id="success-popup" class="popup-container text-center relative"> 
+    <button type="button" id="popup-close-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors">
+        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
         </svg>
+    </button>
+    <svg class="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" ...>
+        <path ...></path>
+    </svg>
     
-        <h3 class="text-2xl font-bold text-gray-800 mb-3">บันทึกข้อมูลสำเร็จ!</h3>
-        <p class="text-gray-600 mb-8">ข้อมูลของคุณถูกส่งและบันทึกลงในชีตเรียบร้อยแล้ว</p>
+    <h3 class="text-2xl font-bold text-gray-800 mb-3">บันทึกข้อมูลสำเร็จ!</h3>
+    <p class="text-gray-600 mb-8">ข้อมูลของคุณถูกส่งและบันทึกลงในชีตเรียบร้อยแล้ว</p>
     
-        <div class="space-y-3">
-            <button type="button" id="popup-download-btn" 
-                    class="w-full px-6 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 font-semibold shadow-md transition duration-150 text-lg">
-                ดาวน์โหลดไฟล์ Word (.docx)
-            </button>
+    <div class="space-y-3">
+        <button type="button" id="popup-download-btn" 
+                class="w-full px-6 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 font-semibold shadow-md transition duration-150 text-lg">
+            ดาวน์โหลดไฟล์ Word (.docx)
+        </button>
         
-            <button type="button" id="popup-close-btn" 
-                    class="w-full px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium transition duration-150">
-                X
-            </button>
         </div>
     </div>
     </form>
@@ -828,27 +829,44 @@
 
     function resetForm() {
         document.getElementById('funding-form').reset();
+        document.getElementById('clear-name-btn').classList.add('hidden');
+        document.getElementById('clear-article_title-btn').classList.add('hidden');
+        document.getElementById('clear-journal_name-btn').classList.add('hidden');
+        document.getElementById('clear-publish_pages-btn').classList.add('hidden');
+        document.getElementById('clear-project_title-btn').classList.add('hidden');
+        document.getElementById('clear-address-btn').classList.add('hidden');
+        document.getElementById('clear-district-btn').classList.add('hidden');
+        document.getElementById('clear-amphoe-btn').classList.add('hidden');
+        document.getElementById('clear-province-btn').classList.add('hidden');
+        document.getElementById('clear-external_source-btn').classList.add('hidden');
+        document.getElementById('clear-funding_year-btn').classList.add('hidden');
+
+        // 3. รีเซ็ตข้อมูล "ที่ถูกฟิก" (ช่องที่เติมให้อัตโนมัติ)
         document.getElementById('department-display').textContent = ''; 
         document.getElementById('phone').value = '';
         document.getElementById('phone-display').textContent = '';
-        document.getElementById('clear-name-btn').classList.add('hidden'); 
         document.getElementById('receipt_name_display').textContent = '';
         document.getElementById('text3_total').value = '';
-        
+    
+        // 4. รีเซ็ตปฏิทิน
         recordDatePicker.setDate("today", true); 
         publishDatePicker.clear(); 
 
-        handleFundingSourceChange();
-        
+        // 5. รีเซ็ตช่องที่ซ่อนอยู่ (ปีงบประมาณ/แหล่งทุน)
+        handleFundingSourceChange(); 
+    
+        // 6. รีเซ็ต Choices.js Dropdowns (รวมถึง "อว")
         if (choicesDocPrefix) { choicesDocPrefix.setChoiceByValue(''); choicesDocPrefix.disable(); }
         if (choicesArticleType) choicesArticleType.setChoiceByValue('');
         if (choicesDatabase) choicesDatabase.setChoiceByValue('');
         if (choicesFunding) choicesFunding.setChoiceByValue('');
         if (choicesDropdown6) choicesDropdown6.setChoiceByValue('');
         if (choicesDropdown7) choicesDropdown7.setChoiceByValue('');
-        
+    
+        // 7. รีเซ็ต Checkbox ในตาราง
         document.querySelectorAll('#form-section-4 input[type="checkbox"]').forEach(cb => cb.checked = false);
-        
+    
+        // 8. ซ่อนฟอร์มส่วน 2, 3, 4 และเลื่อนกลับไปบนสุด
         updateFormVisibility(false);
         sec1.scrollIntoView({ behavior: 'smooth' });
     }
