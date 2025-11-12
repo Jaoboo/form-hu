@@ -1,9 +1,9 @@
-// sheetsHandler.js (แก้ไขแล้ว)
+// sheetsHandler.js 
 
 require('dotenv').config();
 
 const { google } = require('googleapis');
-// ▼▼▼ เพิ่มบรรทัดนี้ ▼▼▼
+
 const { GoogleAuth } = require('google-auth-library');
 
 // 2. ดึงค่ามาจาก process.env
@@ -17,15 +17,15 @@ if (!READ_SPREADSHEET_ID || !WRITE_SPREADSHEET_ID || !API_KEY) {
     console.error('โปรดตรวจสอบไฟล์ .env ของคุณว่ากำหนดค่าครบถ้วนหรือไม่');
 }
 
-// ----------------------------------------------------
-// A. Function to fetch data (READ) - (ส่วนนี้เหมือนเดิมทุกอย่าง)
-// ----------------------------------------------------
+// ---------------------------------
+// A. Function to fetch data (READ) 
+// ---------------------------------
 async function getReadSheetData() {
     try {
        console.log('Attempting to read from spreadsheet:', READ_SPREADSHEET_ID);
            const sheets = google.sheets({ 
           version: 'v4', 
-          auth: API_KEY // ใช้อ่านได้ (ถ้าชีตเป็น Public)
+          auth: API_KEY 
        });
 
        const sheetNames = ['อาจารย์ภายใน (21Oct2025)'];
@@ -46,7 +46,7 @@ async function getReadSheetData() {
             continue;
           }
           
-          console.log(`✅ Found data in ${sheetName}! ${rows.length} rows`);
+          console.log(`Found data in ${sheetName}! ${rows.length} rows`);
           
           const [headers, ...dataRows] = rows;
           
@@ -70,7 +70,7 @@ async function getReadSheetData() {
           }
        }
        
-       console.error('❌ Could not read from any sheet name');
+       console.error('Could not read from any sheet name');
        return [];
 
     } catch (error) {
@@ -81,29 +81,28 @@ async function getReadSheetData() {
     }
 }
 
-// ----------------------------------------------------
-// B. Function to append data (WRITE) - (▼▼▼ แก้ไขส่วนนี้ ▼▼▼)
-// ----------------------------------------------------
+// -----------------------------------
+// B. Function to append data (WRITE) 
+// -----------------------------------
 async function appendWriteSheetData(dataToAppend) {
     try {
        console.log('Attempting to write to spreadsheet:', WRITE_SPREADSHEET_ID);
        console.log('Data to append:', dataToAppend);
            // 1. สร้าง Auth Client โดยใช้ Service Account (ไฟล์ JSON)
        const auth = new GoogleAuth({
-          keyFile: 'service-account-key.json', // ชื่อไฟล์ JSON ที่คุณดาวน์โหลดมา
-          scopes: ['https://www.googleapis.com/auth/spreadsheets'], // ขอบเขตสิทธิ์ที่ขอ
+          keyFile: 'service-account-key.json', 
+          scopes: ['https://www.googleapis.com/auth/spreadsheets'], 
        });
 
-       // 2. สร้าง Sheets client โดยใช้ Auth ที่เราเพิ่งสร้าง
+       // 2. สร้าง Sheets client 
        const sheets = google.sheets({ 
           version: 'v4', 
-          auth: auth // ◀◀◀ เปลี่ยนจาก API_KEY เป็น auth object
+          auth: auth // 
        });
        
        const values = [dataToAppend];
        
-       // ลองหลายชื่อ Sheet (แก้เป็น array)
-       const sheetNames = ['1']; // ชื่อชีตที่จะเขียน
+       const sheetNames = ['1']; //
        
        for (const sheetName of sheetNames) {
           try {
@@ -116,19 +115,18 @@ async function appendWriteSheetData(dataToAppend) {
             resource: { values },
           });
 
-          console.log(`✅ Write successful to ${sheetName}!`);
+          console.log(`Write successful to ${sheetName}!`);
           console.log('Updated range:', response.data.updates.updatedRange);
           return response.data;
           
           } catch (error) {
           console.log(`Failed writing to ${sheetName}: ${error.message}`);
-          // แสดง Error ที่มาจาก Google API ให้ชัดเจน (ซึ่งก็คือ Error 403 ที่คุณเจอ)
           console.error('Google API Error:', error.response ? JSON.stringify(error.response.data, null, 2) : error.message);
           continue;
           }
        }
        
-       console.error('❌ Could not write to any sheet');
+       console.error('Could not write to any sheet');
        return null;
        
     } catch (error) {

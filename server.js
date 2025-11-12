@@ -1,7 +1,7 @@
-// 1. โหลด Library ที่จำเป็น
-require('dotenv').config(); // โหลด .env ก่อนเสมอ
+// 1. โหลด Library
+require('dotenv').config();
 const express = require('express');
-const cors = require('cors'); // โหลด cors
+const cors = require('cors');
 const path = require('path');
 
 // 2. โหลดฟังก์ชันที่เราเขียนเองจาก sheetsHandler.js
@@ -12,8 +12,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // 4. ตั้งค่า Middleware
-app.use(cors()); // อนุญาตให้หน้าเว็บ (ที่อยู่คนละ Domain) เรียก API นี้ได้
-app.use(express.json()); // ให้ Server อ่าน JSON ที่ส่งมาจากหน้าเว็บได้ (สำหรับตอนบันทึก)
+app.use(cors()); 
+app.use(express.json()); 
 
 app.use(express.static('public'));
 
