@@ -300,19 +300,19 @@
           animation: fadeIn 0.3s ease;
         }
         .popup-container {
-          display: none;
-          position: fixed;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          background: white;
-          padding: 2rem;
-          border-radius: 1rem;
-          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-          z-index: 9999;
-          max-width: 500px;
-          width: 90%;
-          animation: slideIn 0.3s ease;
+            display: none;
+            position: fixed !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            z-index: 9999 !important;
+            max-width: 500px;
+            width: 90%;
+            animation: slideIn 0.3s ease;
         }
         .popup-container.show,
         .popup-overlay.show {
@@ -487,8 +487,21 @@
                         <option>วารสารระดับนานาชาติ (Quartile 4)</option>
                         <option>วารสารระดับนานาชาติ (อยู่ในฐานข้อมูลที่ กพอ.ยอมรับ (โปรดระบุชื่อฐานข้อมูล))</option>
                     </select>
-                </div>
-
+                    <div id="custom_database_wrapper" class="hidden mt-2 pl-4">
+                        <label for="custom_database" class="block text-sm font-medium text-gray-700">
+                            ระบุชื่อฐานข้อมูล
+                        </label>
+                        <div class="relative mt-1">
+                            <input type="text" id="custom_database" name="custom_database" placeholder="กรอกชื่อฐานข้อมูล"
+                                   class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]">
+                            <button type="button" id="clear-custom_database-btn" 
+                                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
+                                <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
                 <div class="md:col-span-2">
                     <label for="funding_source" class="block text-sm font-medium text-gray-700">โครงการวิจัยจาก</label>
                     <select id="funding_source" name="funding_source" required class="mt-1 block w-full">
@@ -613,7 +626,6 @@
                         <option value="Quartile 3-4">เงินรางวัลสมทบสำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ปรากฏในฐานข้อมูลของการจัดอันดับวารสาร SCImago Journal Rank (SJR) หรือ ฐานข้อมูล ISI Web of Science, Scopus มีค่า Quartile 3-4 </option>
                         <option value="Quartile 3-4 (มีสมทบ)">เงินรางวัลสำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ปรากฏในฐานข้อมูลของการจัดอันดับวารสาร SJR หรือ ฐานข้อมูล ISI มีค่า Quartile 3-4  และเงินรางวัลสมทบ </option>
                         <option value="Scopus (ไม่มี Quartile)">เงินรางวัลตีพิมพ์สำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ไม่ปรากฏในฐานข้อมูลของการจัดอันดับวารสาร SJR / ฐานข้อมูล ISI แต่ปรากฏในฐานข้อมูล Scopus หรือ วารสารวิชาการที่ ก.พ.อ. ให้การยอมรับ </option>
-                        <option value="Quartile 3-4 (ซ้ำ)">เงินรางวัลสำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ปรากฏในฐานข้อมูลของการจัดอันดับวารสาร SJR หรือ ฐานข้อมูล ISI มีค่า Quartile 3-4 </option>
                     </select>
                     <div id="tci_funded_amount_wrapper" class="hidden mt-2 pl-4">
                         <label for="tci_funded_amount" class="block text-sm font-medium text-gray-700">
@@ -796,8 +808,8 @@
             </button>
             <div id="save-message" class="mt-4 text-center hidden font-semibold"></div>
         </div>
-
-        <div id="popup-overlay" class="popup-overlay"></div>
+    </form>
+    <div id="popup-overlay" class="popup-overlay"></div>
 
     <div id="success-popup" class="popup-container text-center relative"> 
         <button type="button" id="popup-close-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors">
@@ -808,18 +820,17 @@
         <svg class="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
-        <h3 class="text-2xl font-bold text-gray-800 mb-3">บันทึกข้อมูลสำเร็จ!</h3>
-        <p class="text-gray-600 mb-8">ข้อมูลของคุณถูกส่งและบันทึกลงในชีตเรียบร้อยแล้ว</p>
+        <h3 class="text-2xl font-bold text-gray-800 mb-3">สำเร็จ</h3>
+        <!-- <p class="text-gray-600 mb-8">ข้อมูลของคุณถูกส่งและบันทึกลงในชีตเรียบร้อยแล้ว</p> -->
         
         <div class="space-y-3">
             <button type="button" id="popup-download-btn" 
                     class="w-full px-6 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 font-semibold shadow-md transition duration-150 text-lg">
-                ดาวน์โหลดไฟล์ Word (.docx)
+                ดาวน์โหลดไฟล์
             </button>
             
         </div>
     </div>
-    </form>
 
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <script src="bahttext.js"></script> 
@@ -931,6 +942,10 @@
         if (choicesDropdown7) { choicesDropdown7.setChoiceByValue(''); choicesDropdown7.enable(); } // ทำให้ Dropdown7 ว่างและใช้งานได้
         
         document.querySelectorAll('#form-section-4 input[type="checkbox"]').forEach(cb => cb.checked = false);
+        document.getElementById('custom_database_wrapper').classList.add('hidden');
+        document.getElementById('custom_database').value = '';
+        document.getElementById('custom_database').required = false;
+        document.getElementById('clear-custom_database-btn').classList.add('hidden');
         
         // ▼▼▼ เพิ่มการซ่อน Section และปุ่ม Next ▼▼▼
         sec2.classList.add('hidden');
@@ -1027,8 +1042,8 @@
             departmentHiddenInput.value = departmentName;
             phoneInput.value = phoneNumber; 
             phoneDisplay.textContent = phoneNumber;
-            receiptNameDisplay.textContent = nameWithPrefix; // <-- แสดงชื่อเต็ม
-            fullNameHiddenInput.value = nameWithPrefix; // <-- เก็บชื่อเต็มไว้ส่งให้ Word
+            receiptNameDisplay.textContent = selectedName; // ← แสดงแค่ชื่อปกติ (ไม่มีคำนำหน้า)
+            fullNameHiddenInput.value = nameWithPrefix;
             
             const docPrefix = getDocPrefix(departmentName); 
             docPrefixSelect.value = docPrefix; 
@@ -1060,7 +1075,10 @@
         document.getElementById('name').focus(); 
         document.getElementById('doc_number_prefix').value = "";
         
-        if(choicesDocPrefix) choicesDocPrefix.setChoiceByValue("");
+        if(choicesDocPrefix) {
+            choicesDocPrefix.setChoiceByValue("");
+            choicesDocPrefix.disable(); // ← เพิ่มบรรทัดนี้
+        }
 
         updateFormVisibility(false);
     }
@@ -1245,6 +1263,7 @@
         const journalVal = document.getElementById('journal_name').value.trim();
         const publishDateVal = document.getElementById('publish_date').value;
         const databaseVal = document.getElementById('database_source').value;
+        const customDatabaseVal = document.getElementById('custom_database').value.trim(); // ← เพิ่ม
         const fundingVal = document.getElementById('funding_source').value;
         const externalSourceVal = document.getElementById('external_source').value.trim();
         const fundingYearVal = document.getElementById('funding_year').value.trim();
@@ -1258,9 +1277,21 @@
         } else if (fundingVal.includes("งบประมาณส่วนตัว")) {
             fundingCheckPassed = true;
         }
-        
-        const sec2Valid = titleVal !== '' && articleTypeVal !== '' && journalVal !== '' && publishDateVal !== '' && databaseVal !== '' && fundingVal !== '' && projectTitleVal !== '' && fundingCheckPassed;
 
+        // ▼▼▼ เพิ่มการเช็คฐานข้อมูล ▼▼▼
+        let databaseCheckPassed = false;
+        if (databaseVal === 'other') {
+            // ถ้าเลือก "other" ต้องกรอกชื่อฐานข้อมูล
+            if (customDatabaseVal !== '') databaseCheckPassed = true;
+        } else if (databaseVal !== '') {
+            // ถ้าเลือกตัวเลือกอื่น
+            databaseCheckPassed = true;
+        }
+        // ▲▲▲ สิ้นสุด ▲▲▲
+
+        const sec2Valid = titleVal !== '' && articleTypeVal !== '' && journalVal !== '' && 
+                          publishDateVal !== '' && databaseCheckPassed &&
+                          fundingVal !== '' && projectTitleVal !== '' && fundingCheckPassed;
         if (!sec2Valid) {
             return; // จบถ้าส่วนที่ 2 ยังไม่เสร็จ
         }
@@ -1327,6 +1358,11 @@
 
         const articleTypeText = getSelectedText('article_type');
         const databaseSourceText = getSelectedText('database_source');
+        let finalDatabaseText = databaseSourceText;
+        if (formData.get('database_source') === 'other' && customDatabase !== '') {
+            finalDatabaseText = `วารสารระดับนานาชาติ (${customDatabase})`;
+        }
+
         const fundingSourceText = getSelectedText('funding_source');
         const dropdown6Text = getSelectedText('dropdown6');
         
@@ -1340,7 +1376,7 @@
             formData.get('publish_date'),
             formData.get('journal_name'),
             formData.get('publish_pages'),
-            databaseSourceText,
+            finalDatabaseText,
             fundingSourceText,
             formData.get('project_title'),
             dropdown6Text,
@@ -1459,9 +1495,6 @@
                 case "Scopus (ไม่มี Quartile)":
                     grant_details_text = "เงินรางวัลตีพิมพ์สำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ไม่ปรากฏในฐานข้อมูลของการจัดอันดับวารสาร SJR / ฐานข้อมูล ISI แต่ปรากฏในฐานข้อมูล Scopus หรือ วารสารวิชาการที่ ก.พ.อ. ให้การยอมรับ เป็นจำนวนเงิน 2,000 บาท";
                     break;
-                case "Quartile 3-4 (ซ้ำ)":
-                    grant_details_text = "เงินรางวัลสำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ปรากฏในฐานข้อมูลของการจัดอันดับวารสาร SJR หรือ ฐานข้อมูล ISI มีค่า Quartile 3-4 จำนวนเงิน 5,000 บาท";
-                    break;
                 default:
                     grant_details_text = original_dropdown6_text;
             }
@@ -1491,7 +1524,7 @@
                 journal_name: document.getElementById('journal_name').value,
                 publish_date_th: formatDateToThai(document.getElementById('publish_date').value),
                 publish_pages: document.getElementById('publish_pages').value || '-',
-                database_source_text: getSelectedText('database_source'),
+                database_source_text: finalDatabaseText,
                 funding_source_text: fundingSourceText,
                 funding_details: funding_details,
                 external_source: document.getElementById('external_source').value,
@@ -1555,10 +1588,52 @@
             defaultDate: "today",
             clickOpens: false,
             position: "auto right",
+            // ▼▼▼ เพิ่มส่วนนี้เพื่อแสดงปี พ.ศ. ▼▼▼
+            onReady: function(selectedDates, dateStr, instance) {
+                const yearInput = instance.currentYearElement;
+                if (yearInput) {
+                    yearInput.value = parseInt(yearInput.value) + 543;
+                }
+            },
+            onMonthChange: function(selectedDates, dateStr, instance) {
+                const yearInput = instance.currentYearElement;
+                if (yearInput) {
+                    const currentYear = parseInt(yearInput.value);
+                    if (currentYear < 2400) { // ถ้ายังเป็น ค.ศ.
+                        yearInput.value = currentYear + 543;
+                    }
+                }
+            },
+            onYearChange: function(selectedDates, dateStr, instance) {
+                const yearInput = instance.currentYearElement;
+                if (yearInput) {
+                    const currentYear = parseInt(yearInput.value);
+                    if (currentYear < 2400) { // ถ้ายังเป็น ค.ศ.
+                        yearInput.value = currentYear + 543;
+                    }
+                }
+            },
+            onOpen: function(selectedDates, dateStr, instance) {
+                const yearInput = instance.currentYearElement;
+                if (yearInput) {
+                    const currentYear = parseInt(yearInput.value);
+                    if (currentYear < 2400) {
+                        yearInput.value = currentYear + 543;
+                    }
+                }
+            },
             onChange: function(selectedDates, dateStr, instance) {
-                updateFormVisibility(true); 
+                updateFormVisibility(true);
+                // แสดงปี พ.ศ. หลังเลือกวันที่
+                const yearInput = instance.currentYearElement;
+                if (yearInput) {
+                    const currentYear = parseInt(yearInput.value);
+                    if (currentYear < 2400) {
+                        yearInput.value = currentYear + 543;
+                    }
+                }
             }
-         });
+        });
 
         publishDatePicker = flatpickr("#publish_date_wrapper", {
             wrap: true, 
@@ -1566,8 +1641,49 @@
             dateFormat: "Y-m-d",
             clickOpens: false,
             position: "auto right",
+            // ▼▼▼ เพิ่มส่วนเดียวกันสำหรับ publishDatePicker ▼▼▼
+            onReady: function(selectedDates, dateStr, instance) {
+                const yearInput = instance.currentYearElement;
+                if (yearInput) {
+                    yearInput.value = parseInt(yearInput.value) + 543;
+                }
+            },
+            onMonthChange: function(selectedDates, dateStr, instance) {
+                const yearInput = instance.currentYearElement;
+                if (yearInput) {
+                    const currentYear = parseInt(yearInput.value);
+                    if (currentYear < 2400) {
+                        yearInput.value = currentYear + 543;
+                    }
+                }
+            },
+            onYearChange: function(selectedDates, dateStr, instance) {
+                const yearInput = instance.currentYearElement;
+                if (yearInput) {
+                        const currentYear = parseInt(yearInput.value);
+                    if (currentYear < 2400) {
+                        yearInput.value = currentYear + 543;
+                    }
+                }
+            },
+            onOpen: function(selectedDates, dateStr, instance) {
+                const yearInput = instance.currentYearElement;
+                if (yearInput) {
+                    const currentYear = parseInt(yearInput.value);
+                    if (currentYear < 2400) {
+                        yearInput.value = currentYear + 543;
+                    }
+                }
+            },
             onChange: function(selectedDates, dateStr, instance) {
-                updateFormVisibility(true); 
+                updateFormVisibility(true);
+                const yearInput = instance.currentYearElement;
+                if (yearInput) {
+                    const currentYear = parseInt(yearInput.value);
+                    if (currentYear < 2400) {
+                        yearInput.value = currentYear + 543;
+                     }
+                }
             }
         });
 
@@ -1631,7 +1747,22 @@
         document.getElementById('clear-name-btn').addEventListener('click', clearNameInput); 
         
         document.getElementById('article_type').addEventListener('change', () => updateFormVisibility(true));
-        document.getElementById('database_source').addEventListener('change', () => updateFormVisibility(true));
+        document.getElementById('database_source').addEventListener('change', function() {
+            const customWrapper = document.getElementById('custom_database_wrapper');
+            const customInput = document.getElementById('custom_database');
+    
+            if (this.value === 'other') {
+                customWrapper.classList.remove('hidden');
+                customInput.required = true;
+            } else {
+                customWrapper.classList.add('hidden');
+                customInput.required = false;
+                customInput.value = '';
+                document.getElementById('clear-custom_database-btn').classList.add('hidden');
+            }
+    
+            updateFormVisibility(true);
+        });
 
         // ▼▼▼ เพิ่ม Logic ใหม่นี้ ▼▼▼
         document.getElementById('dropdown6').addEventListener('change', function() {
@@ -1677,7 +1808,7 @@
             
             updateTotal(); // อัปเดตช่อง "รวม"
             updateFormVisibility(true);
-_            
+                
         });
         
         // ▼▼▼ 7. แก้ไข Event Listener 2 บรรทัดนี้ ▼▼▼
@@ -1702,6 +1833,7 @@ _
         setupClearableInput('amphoe', true);
         setupClearableInput('province', true); 
         setupClearableInput('external_source', true);
+        setupClearableInput('custom_database', true);
 
         // ▼▼▼ 8. แก้ไขการตั้งค่า Listener สำหรับช่องตัวเลข ▼▼▼
         const fundingYearInput = document.getElementById('funding_year');
