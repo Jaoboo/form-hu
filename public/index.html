@@ -93,7 +93,7 @@
         }
          .flatpickr-current-month input.numInput:hover {
             background: transparent !important; 
-        }
+         }
         .flatpickr-prev-month svg,
         .flatpickr-next-month svg {
             fill: #f3f4f6; 
@@ -336,11 +336,10 @@
 </head>
 <body class="p-4 sm:p-8">
 
-    <div id="loading" class="text-center p-8 space-y-4">
+    <div id="loading" class="fixed inset-0 z-50 flex flex-col items-center justify-center space-y-4 bg-white/80 backdrop-blur-sm">
         <div class="loader"></div> 
         <p class="text-lg font-semibold text-gray-600">Loading</p> 
     </div>
-    
     <form id="funding-form" class="hidden w-[80%] max-w-4xl mx-auto bg-white p-6 sm:p-8 rounded-xl shadow-2xl space-y-8">
         
         <header>
@@ -358,13 +357,14 @@
                     <label for="name" class="block text-sm font-medium text-gray-700">ชื่อ-นามสกุล</label>
                     <div class="relative mt-1"> 
                         <input type="text" id="name" name="name" required
-                                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]">
+                               class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]">
                         <button type="button" id="clear-name-btn" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
                     </div>
+                    <input type="hidden" id="full_name_with_prefix" name="full_name_with_prefix">
                 </div>
 
                 <div class="md:col-span-2">
@@ -387,8 +387,8 @@
                     <label for="record_date" class="block text-sm font-medium text-gray-700">วันที่บันทึก</label>
                     <div class="relative mt-1" id="record_date_wrapper">
                         <input type="text" id="record_date" name="record_date" required placeholder="คลิกไอคอนเพื่อเลือกวันที่"
-                                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]" 
-                                data-input readonly>
+                               class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]" 
+                               data-input readonly>
                         <a class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer" data-toggle>
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
@@ -414,7 +414,12 @@
             </div>
         </div>
 
-        <div id="form-section-2" class="space-y-4 p-4 border border-gray-200 rounded-lg">
+        <div id="next-btn-1-container" class="hidden flex justify-end p-4">
+            <button type="button" id="next-btn-1" class="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-semibold transition duration-150">
+                ถัดไป (ส่วนที่ 2) &rarr;
+            </button>
+        </div>
+        <div id="form-section-2" class="hidden space-y-4 p-4 border border-gray-200 rounded-lg">
             <h2 class="text-xl font-bold text-gray-700">2. ข้อมูลบทความที่ได้รับตีพิมพ์</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
@@ -422,7 +427,7 @@
                     <label for="article_title" class="block text-sm font-medium text-gray-700">ชื่อบทความที่ได้รับตีพิมพ์</label>
                     <div class="relative mt-1">
                         <input type="text" id="article_title" name="article_title" required
-                                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]">
+                               class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]">
                         <button type="button" id="clear-article_title-btn" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
                         </button>
@@ -440,7 +445,7 @@
                     <label for="journal_name" class="block text-sm font-medium text-gray-700">ชื่อวารสาร</label>
                     <div class="relative mt-1">
                         <input type="text" id="journal_name" name="journal_name" required
-                                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]">
+                               class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]">
                         <button type="button" id="clear-journal_name-btn" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
                         </button>
@@ -451,8 +456,8 @@
                     <label for="publish_date" class="block text-sm font-medium text-gray-700">วันที่เผยแพร่</label>
                     <div class="relative mt-1" id="publish_date_wrapper">
                         <input type="text" id="publish_date" name="publish_date" required placeholder="คลิกไอคอนเพื่อเลือกวันที่"
-                                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]" 
-                                data-input readonly>
+                               class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]" 
+                               data-input readonly>
                         <a class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer" data-toggle>
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
@@ -465,7 +470,7 @@
                     <label for="publish_pages" class="block text-sm font-medium text-gray-700">หน้าที่ตีพิมพ์</label>
                     <div class="relative mt-1">
                         <input type="text" id="publish_pages" name="publish_pages"
-                                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]">
+                               class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]">
                         <button type="button" id="clear-publish_pages-btn" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
                         </button>
@@ -524,7 +529,7 @@
                     <label for="project_title" class="block text-sm font-medium text-gray-700">โครงการวิจัยเรื่อง</label>
                     <div class="relative mt-1">
                         <input type="text" id="project_title" name="project_title"
-                                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]">
+                               class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]">
                         <button type="button" id="clear-project_title-btn" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
                         </button>
@@ -532,8 +537,13 @@
                 </div>
             </div>
         </div>
-
-        <div id="form-section-3" class="space-y-4 p-4 border border-gray-200 rounded-lg">
+        
+        <div id="next-btn-2-container" class="hidden flex justify-end p-4">
+            <button type="button" id="next-btn-2" class="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-semibold transition duration-150">
+                ถัดไป (ส่วนที่ 3) &rarr;
+            </button>
+        </div>
+        <div id="form-section-3" class="hidden space-y-4 p-4 border border-gray-200 rounded-lg">
             <h2 class="text-xl font-bold text-gray-700">3. ใบสำคัญรับเงิน</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
@@ -594,7 +604,7 @@
                     </label>
                     <select id="dropdown6" name="dropdown6" class="mt-1 block w-full">
                         <option value="" selected disabled>-- เลือก --</option>
-                        <option value="ค่าแปล (ไม่เชี่ยวชาญ)">ค่าแปลบทความที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ปรากฏในฐานข้อมูลการจัดอันดับวารสาร SJR/ฐานข้อมูล ISI/Scopus หรือวารสารวิชาการเป็นที่ยอมรับตามประกาศ ก.พ.อ. และเป็นภาษาที่ไม่ตรงกับความเชี่ยวชาญของผู้ขอรับทุน </option>
+                        <option value="ค่าแปล (ไม่เชี่ยวชาญ)">ค่าแปลบทความที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ปรากฏในฐานข้อมูลการจัดอันดับวารสาร SJR/ฐานข้อมูล ISI/Scopus หรือวารสารวิชาการเป็นที่ยอมรับตามประกาศ ก.พ.อ. และเป็นภาษาที่ไม่ตรงกับความเชี่ยวชาญของผู้ขอรับทุน  </option>
                         <option value="ค่าตรวจสอบ (เชี่ยวชาญ)">ค่าตรวจสอบภาษาบทความที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ปรากฏในฐานข้อมูลการจัดอันดับวารสาร SJR/ฐานข้อมูล ISI/Scopus หรือวารสารวิชาการเป็นที่ยอมรับตามประกาศ ก.พ.อ. และเป็นภาษาที่ตรงกับความเชี่ยวชาญของผู้ขอรับทุน </option>
                         <option value="TCI กลุ่ม 1">เงินรางวัลตีพิมพ์สำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับชาติ ฐานข้อมูล Thai-Journal Citation Index (TCI) กลุ่ม 1</option>
                         <option value="TCI กลุ่ม 1 (มีทุน)">เงินรางวัลตีพิมพ์สำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับชาติ ฐานข้อมูล Thai-Journal Citation Index (TCI) กลุ่ม 1 และทุนสนับสนุนค่าใช้จ่ายการตีพิมพ์</option>
@@ -605,20 +615,45 @@
                         <option value="Scopus (ไม่มี Quartile)">เงินรางวัลตีพิมพ์สำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ไม่ปรากฏในฐานข้อมูลของการจัดอันดับวารสาร SJR / ฐานข้อมูล ISI แต่ปรากฏในฐานข้อมูล Scopus หรือ วารสารวิชาการที่ ก.พ.อ. ให้การยอมรับ </option>
                         <option value="Quartile 3-4 (ซ้ำ)">เงินรางวัลสำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ปรากฏในฐานข้อมูลของการจัดอันดับวารสาร SJR หรือ ฐานข้อมูล ISI มีค่า Quartile 3-4 </option>
                     </select>
+                    <div id="tci_funded_amount_wrapper" class="hidden mt-2 pl-4">
+                        <label for="tci_funded_amount" class="block text-sm font-medium text-gray-700">
+                            โปรดระบุ "จำนวนเงินค่าตีพิมพ์ตามที่จ่ายจริง" (สำหรับ TCI กลุ่ม 1 มีทุน)
+                        </label>
+                        <div class="relative mt-1">
+                            <input type="text" id="tci_funded_amount" name="tci_funded_amount" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border pr-10 min-h-[42px]">
+                            <button type="button" id="clear-tci_funded_amount-btn" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
+                                <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                     <div>
-                        <label for="dropdown7" class="block text-sm font-medium text-gray-700">หน่วยละ (บาท)</label>
-                        <select id="dropdown7" name="dropdown7" class="mt-1 block w-full">
-                            <option value="" selected disabled>-- เลือก --</option>
-                            <option value="2000">2,000</option>
-                            <option value="3000">3,000</option>
-                            <option value="5000">5,000</option>
-                            <option value="7000">7,000</option>
-                            <option value="10000">10,000</option>
-                        </select>
-                    </div>
+                        <label for="amount" class="block text-sm font-medium text-gray-700">หน่วยละ (บาท)</label>
+                        
+                        <div id="fixed_amount_wrapper">
+                            <select id="dropdown7" name="dropdown7" class="mt-1 block w-full">
+                                <option value="" selected disabled>-- เลือก --</option>
+                                <option value="2000">2,000</option>
+                                <option value="3000">3,000</option>
+                                <option value="5000">5,000</option>
+                                <option value="7000">7,000</option>
+                                <option value="10000">10,000</option>
+                            </select>
+                        </div>
+
+                        <div id="variable_amount_wrapper" class="hidden mt-1">
+                            <div class="relative">
+                                <input type="text" id="variable_amount_input" name="variable_amount_input"
+                                       class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 p-2 border min-h-[42px] pr-10">
+                                <button type="button" id="clear-variable_amount_input-btn" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
+                                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                                </button>
+                            </div>
+                            <p id="variable_amount_helper" class="text-xs text-red-600 mt-1"></p>
+                        </div>
+                        </div>
                     <div>
                         <label for="text3_total" class="block text-sm font-medium text-gray-700">รวม (บาท)</label>
                         <input type="text" id="text3_total" name="text3_total" class="block w-full rounded-lg border-gray-300 shadow-sm p-2 border min-h-[42px]" readonly>
@@ -627,7 +662,12 @@
             </div>
         </div>
 
-        <div id="form-section-4" class="space-y-4 p-4 border border-gray-200 rounded-lg">
+        <div id="next-btn-3-container" class="hidden flex justify-end p-4">
+            <button type="button" id="next-btn-3" class="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-semibold transition duration-150">
+                ถัดไป (ส่วนที่ 4) &rarr;
+            </button>
+        </div>
+        <div id="form-section-4" class="hidden space-y-4 p-4 border border-gray-200 rounded-lg">
             <h2 class="text-xl font-bold text-gray-700">4. แบบตรวจสอบความครบถ้วน</h2>
             <div class="section-title">รายการตรวจสอบ</div>
             <table>
@@ -750,7 +790,7 @@
             </table>
         </div>
 
-        <div id="submit-button-container" class="flex flex-col items-end pt-4">
+        <div id="submit-button-container" class="hidden flex flex-col items-end pt-4">
             <button type="submit" id="save-btn" class="px-8 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 font-semibold shadow-md transition duration-150 text-lg">
                 ส่งข้อมูลและบันทึก
             </button>
@@ -760,24 +800,23 @@
         <div id="popup-overlay" class="popup-overlay"></div>
 
     <div id="success-popup" class="popup-container text-center relative"> 
-    <button type="button" id="popup-close-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors">
-        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-    </button>
-    <svg class="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" ...>
-        <path ...></path>
-    </svg>
-    
-    <h3 class="text-2xl font-bold text-gray-800 mb-3">บันทึกข้อมูลสำเร็จ!</h3>
-    <p class="text-gray-600 mb-8">ข้อมูลของคุณถูกส่งและบันทึกลงในชีตเรียบร้อยแล้ว</p>
-    
-    <div class="space-y-3">
-        <button type="button" id="popup-download-btn" 
-                class="w-full px-6 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 font-semibold shadow-md transition duration-150 text-lg">
-            ดาวน์โหลดไฟล์ Word (.docx)
+        <button type="button" id="popup-close-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors">
+            <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
         </button>
+        <svg class="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <h3 class="text-2xl font-bold text-gray-800 mb-3">บันทึกข้อมูลสำเร็จ!</h3>
+        <p class="text-gray-600 mb-8">ข้อมูลของคุณถูกส่งและบันทึกลงในชีตเรียบร้อยแล้ว</p>
         
+        <div class="space-y-3">
+            <button type="button" id="popup-download-btn" 
+                    class="w-full px-6 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 font-semibold shadow-md transition duration-150 text-lg">
+                ดาวน์โหลดไฟล์ Word (.docx)
+            </button>
+            
         </div>
     </div>
     </form>
@@ -786,18 +825,33 @@
 <script src="bahttext.js"></script> 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/pizzip@3.2.0/dist/pizzip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pizzip@3.1.4/dist/pizzip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.42.3/docxtemplater.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
 <script>
+    // ▼▼▼ เพิ่ม Object นี้เข้าไป ▼▼▼
+    const grantDetails = {
+        "ค่าแปล (ไม่เชี่ยวชาญ)": { type: "variable", max: 10000 },
+        "ค่าตรวจสอบ (เชี่ยวชาญ)": { type: "variable", max: 5000 },
+        "TCI กลุ่ม 1": { type: "fixed", amount: 3000 },
+        "TCI กลุ่ม 1 (มีทุน)": { type: "hybrid", amount: 5000 }, // กรณีพิเศษ
+        "Quartile 1": { type: "fixed", amount: 10000 },
+        "Quartile 2": { type: "fixed", amount: 7000 },
+        "Quartile 3-4": { type: "fixed", amount: 5000 },
+        "Quartile 3-4 (มีสมทบ)": { type: "fixed", amount: 10000 },
+        "Scopus (ไม่มี Quartile)": { type: "fixed", amount: 2000 },
+        "Quartile 3-4 (ซ้ำ)": { type: "fixed", amount: 5000 }
+    };
+    // ▲▲▲ สิ้นสุดส่วนที่เพิ่ม ▲▲▲
+
     let allData = [];
     let recordDatePicker;
     let publishDatePicker;
 
     let sec1, sec2, sec3, sec4, submitContainer;
     let choicesDocPrefix, choicesArticleType, choicesDatabase, choicesFunding, choicesDropdown6, choicesDropdown7;
+    let nextBtn1Container, nextBtn2Container, nextBtn3Container; // <-- 1.2 เพิ่มบรรทัดนี้
 
     function formatDateToThai(dateString) {
         if (!dateString) return '';
@@ -819,6 +873,7 @@
     function showSuccessPopup() {
         document.getElementById('popup-overlay').classList.add('show');
         document.getElementById('success-popup').classList.add('show');
+        window.scrollTo(0, 0); // <-- 2. แก้ไข: เปลี่ยนเป็นเลื่อนทันที
     }
 
     function closePopup() {
@@ -827,6 +882,7 @@
         resetForm();
     }
 
+    // ▼▼▼ 1.3 แทนที่ resetForm() เดิมด้วยโค้ดนี้ ▼▼▼
     function resetForm() {
         document.getElementById('funding-form').reset();
         document.getElementById('clear-name-btn').classList.add('hidden');
@@ -840,36 +896,57 @@
         document.getElementById('clear-province-btn').classList.add('hidden');
         document.getElementById('clear-external_source-btn').classList.add('hidden');
         document.getElementById('clear-funding_year-btn').classList.add('hidden');
+        document.getElementById('clear-tci_funded_amount-btn').classList.add('hidden');
+        document.getElementById('clear-variable_amount_input-btn')?.classList.add('hidden'); // ซ่อนปุ่ม X ของ variable (ถ้ามี)
 
-        // 3. รีเซ็ตข้อมูล "ที่ถูกฟิก" (ช่องที่เติมให้อัตโนมัติ)
         document.getElementById('department-display').textContent = ''; 
         document.getElementById('phone').value = '';
         document.getElementById('phone-display').textContent = '';
+        document.getElementById('doc_number_prefix').classList.remove('hidden');
         document.getElementById('receipt_name_display').textContent = '';
         document.getElementById('text3_total').value = '';
-    
-        // 4. รีเซ็ตปฏิทิน
+        document.getElementById('full_name_with_prefix').value = ''; // รีเซ็ตชื่อเต็ม
+        
         recordDatePicker.setDate("today", true); 
         publishDatePicker.clear(); 
 
-        // 5. รีเซ็ตช่องที่ซ่อนอยู่ (ปีงบประมาณ/แหล่งทุน)
         handleFundingSourceChange(); 
-    
-        // 6. รีเซ็ต Choices.js Dropdowns (รวมถึง "อว")
+        document.getElementById('tci_funded_amount_wrapper').classList.add('hidden'); // ซ่อนช่อง TCI
+
+        // รีเซ็ตช่อง "หน่วยละ" กลับเป็น Dropdown
+        document.getElementById('fixed_amount_wrapper').classList.remove('hidden');
+        document.getElementById('variable_amount_wrapper').classList.add('hidden');
+        document.getElementById('variable_amount_input').value = '';
+        document.getElementById('variable_amount_helper').textContent = '';
+        
+        document.getElementById('variable_amount_input').dataset.max = ''; 
+        document.getElementById('variable_amount_helper').classList.remove('font-bold'); 
+        document.getElementById('doc_number_prefix').value = '';
+        
         if (choicesDocPrefix) { choicesDocPrefix.setChoiceByValue(''); choicesDocPrefix.disable(); }
         if (choicesArticleType) choicesArticleType.setChoiceByValue('');
         if (choicesDatabase) choicesDatabase.setChoiceByValue('');
         if (choicesFunding) choicesFunding.setChoiceByValue('');
         if (choicesDropdown6) choicesDropdown6.setChoiceByValue('');
-        if (choicesDropdown7) choicesDropdown7.setChoiceByValue('');
-    
-        // 7. รีเซ็ต Checkbox ในตาราง
+        if (choicesDropdown7) { choicesDropdown7.setChoiceByValue(''); choicesDropdown7.enable(); } // ทำให้ Dropdown7 ว่างและใช้งานได้
+        
         document.querySelectorAll('#form-section-4 input[type="checkbox"]').forEach(cb => cb.checked = false);
-    
-        // 8. ซ่อนฟอร์มส่วน 2, 3, 4 และเลื่อนกลับไปบนสุด
+        
+        // ▼▼▼ เพิ่มการซ่อน Section และปุ่ม Next ▼▼▼
+        sec2.classList.add('hidden');
+        sec3.classList.add('hidden');
+        sec4.classList.add('hidden');
+        submitContainer.classList.add('hidden');
+        
+        if (nextBtn1Container) nextBtn1Container.classList.add('hidden');
+        if (nextBtn2Container) nextBtn2Container.classList.add('hidden');
+        if (nextBtn3Container) nextBtn3Container.classList.add('hidden');
+        // ▲▲▲ สิ้นสุดการแก้ไข ▲▲▲
+        
         updateFormVisibility(false);
-        sec1.scrollIntoView({ behavior: 'smooth' });
     }
+    // ▲▲▲ สิ้นสุดการแทนที่ ▲▲▲
+
 
     async function fetchData() {
         try {
@@ -902,6 +979,7 @@
         return ""; 
     }
     
+    // ▼▼▼ แทนที่ autofillData() เดิมด้วยโค้ดนี้ ▼▼▼
     function autofillData() {
         const nameInput = document.getElementById('name');
         const selectedName = nameInput.value.trim();
@@ -913,6 +991,7 @@
         const phoneInput = document.getElementById('phone'); 
         const phoneDisplay = document.getElementById('phone-display');
         const receiptNameDisplay = document.getElementById('receipt_name_display'); 
+        const fullNameHiddenInput = document.getElementById('full_name_with_prefix');
 
         if (nameInput.value.length > 0) {
             clearBtn.classList.remove('hidden');
@@ -928,23 +1007,40 @@
         if (matchedRow) {
             const departmentName = matchedRow['ภาควิชา'] || '';
             const phoneNumber = matchedRow['เบอร์โทร'] || ''; 
+            const prefix = matchedRow['ตำแหน่ง'] || '';
+
+            // ▼▼▼ แก้ไข Logic การรวมชื่อ ▼▼▼
+            let nameWithPrefix = '';
+            if (prefix) {
+                if (prefix.endsWith('.')) {
+                    nameWithPrefix = `${prefix} ${selectedName}`; // มี . ให้เว้นวรรค
+                } else {
+                    nameWithPrefix = `${prefix}${selectedName}`; // ไม่มี . ให้ติดกัน
+                }
+            } else {
+                nameWithPrefix = selectedName; // ไม่มีคำนำหน้า
+            }
+            nameWithPrefix = nameWithPrefix.trim();
+            // ▲▲▲ สิ้นสุดการแก้ไข ▲▲▲
             
             departmentDisplay.textContent = departmentName;
             departmentHiddenInput.value = departmentName;
             phoneInput.value = phoneNumber; 
             phoneDisplay.textContent = phoneNumber;
-            receiptNameDisplay.textContent = selectedName; 
+            receiptNameDisplay.textContent = nameWithPrefix; // <-- แสดงชื่อเต็ม
+            fullNameHiddenInput.value = nameWithPrefix; // <-- เก็บชื่อเต็มไว้ส่งให้ Word
             
-            const prefix = getDocPrefix(departmentName); 
-            docPrefixSelect.value = prefix; 
-            if(choicesDocPrefix) choicesDocPrefix.setChoiceByValue(prefix || "");
+            const docPrefix = getDocPrefix(departmentName); 
+            docPrefixSelect.value = docPrefix; 
+            if(choicesDocPrefix) choicesDocPrefix.setChoiceByValue(docPrefix || "");
 
         } else {
             departmentDisplay.textContent = '';
             departmentHiddenInput.value = '';
             phoneInput.value = ''; 
             phoneDisplay.textContent = '';
-            receiptNameDisplay.textContent = ''; 
+            receiptNameDisplay.textContent = selectedName; // ถ้าไม่เจอ ก็แสดงชื่อที่พิมพ์
+            fullNameHiddenInput.value = selectedName; // เก็บชื่อที่พิมพ์
             docPrefixSelect.value = ""; 
             if(choicesDocPrefix) choicesDocPrefix.setChoiceByValue("");
         }
@@ -959,6 +1055,7 @@
         document.getElementById('phone').value = ''; 
         document.getElementById('phone-display').textContent = '';
         document.getElementById('receipt_name_display').textContent = ''; 
+        document.getElementById('full_name_with_prefix').value = ''; // <-- เพิ่มบรรทัดนี้
         document.getElementById('clear-name-btn').classList.add('hidden');
         document.getElementById('name').focus(); 
         document.getElementById('doc_number_prefix').value = "";
@@ -977,8 +1074,8 @@
 
         container.classList.add('hidden');
         externalWrapper.className = 'hidden'; 
-        yearWrapper.className = 'hidden';     
-        helper.textContent = '';               
+        yearWrapper.className = 'hidden';    
+        helper.textContent = '';         
         
         document.getElementById('external_source').value = '';
         document.getElementById('funding_year').value = '';
@@ -1001,13 +1098,90 @@
         }
     }
     
+    // ▼▼▼ แทนที่ updateTotal() เดิมด้วยโค้ดนี้ ▼▼▼
     function updateTotal() {
-         const amount = document.getElementById('dropdown7').value;
+         // ตรวจสอบว่าช่อง Input (Variable) แสดงอยู่หรือไม่
+         const variableWrapper = document.getElementById('variable_amount_wrapper');
+         let amount = '';
+
+         if (!variableWrapper.classList.contains('hidden')) {
+             // ถ้าช่อง Input แสดงอยู่ ให้ดึงค่าจากช่อง Input
+             amount = document.getElementById('variable_amount_input').value.replace(/,/g, '') || '0';
+         } else {
+             // ถ้าช่อง Dropdown แสดงอยู่ ให้ดึงค่าจาก Dropdown
+             amount = document.getElementById('dropdown7').value;
+         }
+         
+         // อัปเดตช่อง "รวม"
          document.getElementById('text3_total').value = amount ? new Intl.NumberFormat().format(amount) : '';
          
          updateFormVisibility(true); 
     }
 
+    function handleNumericInput(event, maxLength = null) {
+        const input = event.target;
+        const originalValue = input.value;
+        let newValue = originalValue.replace(/[^0-9]/g, ''); // ลบทุกอย่างที่ไม่ใช่ตัวเลข
+
+        if (maxLength && newValue.length > maxLength) {
+            newValue = newValue.substring(0, maxLength); // จำกัดความยาว
+        }
+        
+        if (originalValue !== newValue) {
+            input.value = newValue;
+        }
+
+        // ถ้าเป็นช่องปี ให้เช็ค visibility ด้วย
+        if (input.id === 'funding_year') {
+            updateFormVisibility(true);
+        }
+    }
+
+    // ฟังก์ชันนี้จะทำงาน "ขณะพิมพ์" (oninput)
+    function validateAmountInput() {
+        const input = document.getElementById('variable_amount_input');
+        const helper = document.getElementById('variable_amount_helper');
+        const max = parseInt(input.dataset.max, 10);
+        
+        if (!max) { // ไม่มี max ให้เช็ค
+            updateTotal();
+            return;
+        }
+        
+        // ดึงค่าตัวเลข, ลบลูกน้ำออก
+        let value = parseInt(input.value.replace(/,/g, ''), 10);
+
+        if (isNaN(value)) {
+            // ถ้าผู้ใช้ลบ หรือพิมพ์ตัวอักษร
+            helper.classList.remove('font-bold');
+            updateTotal(); // อัปเดต total (จะเป็น 0)
+            return;
+        }
+
+        if (value > max) {
+            input.value = max.toLocaleString('en-US'); // ใส่ค่า max ให้เลย
+            helper.classList.add('font-bold');
+        } else {
+            // ค่าถูกต้อง (<= max)
+            helper.classList.remove('font-bold');
+            // ไม่ต้อง format ตอนพิมพ์ มันจะกวน
+        }
+        
+        updateTotal(); // อัปเดต total
+    }
+
+    // function นี้สำหรับจัดรูปแบบตอน "คลิกออก" (onblur)
+    function formatAmountInput() {
+        const input = document.getElementById('variable_amount_input');
+        let value = parseInt(input.value.replace(/,/g, ''), 10);
+        
+        if (!isNaN(value)) {
+            input.value = value.toLocaleString('en-US');
+        } else {
+            input.value = ''; // ล้างค่าถ้าไม่ใช่ตัวเลข
+        }
+        updateTotal(); // อัปเดต total อีกครั้งหลัง format
+    }
     function setupClearableInput(inputId, isKeyField = false) {
         const input = document.getElementById(inputId);
         const button = document.getElementById(`clear-${inputId}-btn`);
@@ -1034,18 +1208,38 @@
             toggleButton();
             input.focus();
             
-            updateFormVisibility(false); 
+            updateFormVisibility(true); // <-- แก้ไข: ให้ update visibility เมื่อเคลียร์ค่า
         });
 
         toggleButton();
     }
 
-    function updateFormVisibility(scroll = false) {
+    // ▼▼▼ 1.4 แทนที่ updateFormVisibility() เดิม (บรรทัด 1152-1234) ด้วยโค้ดนี้ ▼▼▼
+    function updateFormVisibility(scroll = false) { // scroll parameter is no longer used
+        // Section 1 Check
         const nameVal = document.getElementById('name').value.trim();
         const deptVal = document.getElementById('department').value.trim();
         const recordDateVal = document.getElementById('record_date').value;
         const docPrefixVal = document.getElementById('doc_number_prefix').value;
+        
+        const sec1Valid = nameVal !== '' && deptVal !== '' && recordDateVal !== '' && docPrefixVal !== '';
+        
+        // Hide all buttons by default
+        if (nextBtn1Container) nextBtn1Container.classList.add('hidden');
+        if (nextBtn2Container) nextBtn2Container.classList.add('hidden');
+        if (nextBtn3Container) nextBtn3Container.classList.add('hidden');
+        
+        if (!sec1Valid) {
+            return; // จบถ้าส่วนที่ 1 ยังไม่เสร็จ
+        }
 
+        // ถ้าส่วนที่ 1 เสร็จ และ ส่วนที่ 2 ยังไม่แสดง
+        if (sec1Valid && sec2.classList.contains('hidden')) {
+            nextBtn1Container.classList.remove('hidden');
+            return; // แสดงปุ่ม 1 แล้วจบ
+        }
+
+        // Section 2 Check
         const titleVal = document.getElementById('article_title').value.trim();
         const articleTypeVal = document.getElementById('article_type').value;
         const journalVal = document.getElementById('journal_name').value.trim();
@@ -1056,66 +1250,55 @@
         const fundingYearVal = document.getElementById('funding_year').value.trim();
         const projectTitleVal = document.getElementById('project_title').value.trim();
 
+        let fundingCheckPassed = false;
+        if (fundingVal === "งบประมาณรายได้มหาวิทยาลัยนเรศวร" || fundingVal.includes("งบประมาณรายได้คณะมนุษยศาสตร์")) {
+            if (fundingYearVal !== '') fundingCheckPassed = true;
+        } else if (fundingVal.includes("แหล่งทุนวิจัยภายนอก")) {
+            if (fundingYearVal !== '' && externalSourceVal !== '') fundingCheckPassed = true;
+        } else if (fundingVal.includes("งบประมาณส่วนตัว")) {
+            fundingCheckPassed = true;
+        }
+        
+        const sec2Valid = titleVal !== '' && articleTypeVal !== '' && journalVal !== '' && publishDateVal !== '' && databaseVal !== '' && fundingVal !== '' && projectTitleVal !== '' && fundingCheckPassed;
+
+        if (!sec2Valid) {
+            return; // จบถ้าส่วนที่ 2 ยังไม่เสร็จ
+        }
+        
+        // ถ้าส่วนที่ 2 เสร็จ และ ส่วนที่ 3 ยังไม่แสดง
+        if (sec2Valid && sec3.classList.contains('hidden')) {
+            nextBtn2Container.classList.remove('hidden');
+            return; // แสดงปุ่ม 2 แล้วจบ
+        }
+        
+        // Section 3 Check
         const addressVal = document.getElementById('address').value.trim();
         const districtVal = document.getElementById('district').value.trim();
         const amphoeVal = document.getElementById('amphoe').value.trim();
         const provinceVal = document.getElementById('province').value.trim();
         const grantTypeVal = document.getElementById('dropdown6').value;
-        const amountVal = document.getElementById('dropdown7').value;
+        
+        const variableWrapper = document.getElementById('variable_amount_wrapper');
+        let amountVal = '';
+        if (!variableWrapper.classList.contains('hidden')) {
+            amountVal = document.getElementById('variable_amount_input').value.trim();
+        } else {
+            amountVal = document.getElementById('dropdown7').value;
+        }
+        
+        const sec3Valid = addressVal !== '' && districtVal !== '' && amphoeVal !== '' && provinceVal !== '' && grantTypeVal !== '' && amountVal !== '';
 
-        sec2.classList.add('hidden');
-        sec3.classList.add('hidden');
-        sec4.classList.add('hidden');
-        submitContainer.classList.add('hidden');
-
-        sec2.classList.remove('was-scrolled');
-        sec3.classList.remove('was-scrolled');
-        sec4.classList.remove('was-scrolled');
-
-        if (nameVal === '' || deptVal === '' || recordDateVal === '' || docPrefixVal === '') {
-            return;
+        if (!sec3Valid) {
+            return; // จบถ้าส่วนที่ 3 ยังไม่เสร็จ
         }
 
-        sec2.classList.remove('hidden');
-        if (scroll && !sec2.classList.contains('was-scrolled')) {
-            sec2.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            sec2.classList.add('was-scrolled');
+        // ถ้าส่วนที่ 3 เสร็จ และ ส่วนที่ 4 ยังไม่แสดง
+        if (sec3Valid && sec4.classList.contains('hidden')) {
+            nextBtn3Container.classList.remove('hidden');
+            return; // แสดงปุ่ม 3 แล้วจบ
         }
-
-        if (titleVal === '' || articleTypeVal === '' || journalVal === '' || publishDateVal === '' || databaseVal === '' || fundingVal === '' || projectTitleVal === '') {
-            return;
-        }
-
-        let fundingCheckPassed = false;
-        if (fundingVal === "งบประมาณรายได้มหาวิทยาลัยนเรศวร" || fundingVal.includes("งบประมาณรายได้คณะมนุษยศาสตร์")) {
-            if (fundingYearVal !== '') fundingCheckPassed = true;
-        } else if (fundingVal.includes("แหล่งทุนวิจัยภายนอก")) {
-                if (fundingYearVal !== '' && externalSourceVal !== '') fundingCheckPassed = true;
-        } else if (fundingVal.includes("งบประมาณส่วนตัว")) {
-                fundingCheckPassed = true;
-        }
-
-        if (!fundingCheckPassed) {
-            return;
-        }
-
-        sec3.classList.remove('hidden');
-        if (scroll && !sec3.classList.contains('was-scrolled')) {
-            sec3.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            sec3.classList.add('was-scrolled');
-        }
-
-        if (addressVal === '' || districtVal === '' || amphoeVal === '' || provinceVal === '' || grantTypeVal === '' || amountVal === '') {
-        return;
-        }
-
-        sec4.classList.remove('hidden');
-        submitContainer.classList.remove('hidden');
-        if (scroll && !sec4.classList.contains('was-scrolled')) {
-            sec4.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            sec4.classList.add('was-scrolled');
-        } 
     }
+    // ▲▲▲ สิ้นสุดการแทนที่ ▲▲▲
     
     async function handleFormSubmit(event) {
         event.preventDefault(); 
@@ -1196,7 +1379,7 @@
         saveBtn.textContent = 'ส่งข้อมูลและบันทึก';
     }
 
-    // ▼▼▼ จุดที่ 2: แก้ไขฟังก์ชัน generateWord ให้ใช้ PizZip ▼▼▼
+    // ▼▼▼ แทนที่ generateWord() เดิมด้วยโค้ดนี้ ▼▼▼
     async function generateWord() {
         const btn = document.getElementById('popup-download-btn');
         const originalHTML = btn.innerHTML;
@@ -1204,7 +1387,6 @@
         btn.innerHTML = '<svg class="animate-spin h-5 w-5 text-white inline-block mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> กำลังสร้างไฟล์...';
 
         try {
-            // 2.1 เปลี่ยนไปเช็ก PizZip แทน JSZip
             if (typeof PizZip === 'undefined') throw new Error('ไม่พบ PizZip library');
             if (typeof window.docxtemplater === 'undefined') throw new Error('ไม่พบ docxtemplater library');
             if (typeof window.BAHTTEXT === 'undefined') throw new Error('ไม่พบ BAHTTEXT library');
@@ -1214,45 +1396,118 @@
                 throw new Error(`ไม่พบไฟล์ template.docx (HTTP ${response.status})`);
             }
             const content = await response.arrayBuffer();
-
-            // 2.2 เปลี่ยนไปสร้าง PizZip และใช้ .load() แทน .loadAsync()
             const zip = new PizZip(content); 
             const doc = new window.docxtemplater(zip, {
                 paragraphLoop: true,
                 linebreaks: true,
             });
 
-            const amountValue = document.getElementById('dropdown7').value || '0';
-            const amountNum = parseInt(amountValue);
-            const amountInBaht = window.BAHTTEXT(amountNum); // ใช้ BAHTTEXT (ตัวใหญ่) ถูกแล้ว
+            // ----- ส่วน Logic ที่แก้ไขใหม่ (เริ่ม) -----
+
+            // 1. ดึง "จำนวนเงินสุดท้าย" (Final Amount)
+            const variableWrapper = document.getElementById('variable_amount_wrapper');
+            let finalAmountStr = '0';
+            if (!variableWrapper.classList.contains('hidden')) {
+                // ถ้าช่อง Input แสดงอยู่
+                finalAmountStr = document.getElementById('variable_amount_input').value.replace(/,/g, '') || '0';
+            } else {
+                // ถ้าช่อง Dropdown แสดงอยู่
+                finalAmountStr = document.getElementById('dropdown7').value || '0';
+            }
+            
+            const finalAmountNum = parseInt(finalAmountStr) || 0;
+            const finalAmountFormatted = new Intl.NumberFormat('th-TH').format(finalAmountNum);
+            // ▼▼▼ ย้ายการคำนวณ bahttext มาไว้ตรงนี้ ▼▼▼
+            const amountInBaht = window.BAHTTEXT(finalAmountNum);
+
+            // 2. ดึง "ข้อความทุน" และ "ชื่อเต็ม"
+            const original_dropdown6_text = getSelectedText('dropdown6');
+            const grantType = document.getElementById('dropdown6').value;
+            const tciFundedAmount = document.getElementById('tci_funded_amount').value || '0'; 
+            const fullName = document.getElementById('full_name_with_prefix').value || document.getElementById('name').value;
+            const fundingSourceText = getSelectedText('funding_source');
+            const externalSource = document.getElementById('external_source').value;
+            const fundingYear = document.getElementById('funding_year').value;
+
+            // 3. สร้าง "ข้อความยาว" (grant_details_text)
+            let grant_details_text = ""; 
+            switch (grantType) {
+                case "ค่าแปล (ไม่เชี่ยวชาญ)":
+                    grant_details_text = `ค่าแปลบทความที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ปรากฏในฐานข้อมูลการจัดอันดับวารสาร SJR/ฐานข้อมูล ISI/Scopus หรือวารสารวิชาการเป็นที่ยอมรับตามประกาศ ก.พ.อ. และเป็นภาษาที่ไม่ตรงกับความเชี่ยวชาญของผู้ขอรับทุน จำนวนเงิน ${finalAmountFormatted} บาท`;
+                    break;
+                case "ค่าตรวจสอบ (เชี่ยวชาญ)":
+                    grant_details_text = `ค่าตรวจสอบภาษาบทความที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ปรากฏในฐานข้อมูลการจัดอันดับวารสาร SJR/ฐานข้อมูล ISI/Scopus หรือวารสารวิชาการเป็นที่ยอมรับตามประกาศ ก.พ.อ. และเป็นภาษาที่ตรงกับความเชี่ยวชาญของผู้ขอรับทุน จำนวนเงิน ${finalAmountFormatted} บาท`;
+                    break;
+                case "TCI กลุ่ม 1":
+                    grant_details_text = "เงินรางวัลตีพิมพ์สำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับชาติ ฐานข้อมูล Thai-Journal Citation Index (TCI) กลุ่ม 1 เป็นจำนวนเงิน 3,000 บาท";
+                    break;
+                case "TCI กลุ่ม 1 (มีทุน)":
+                    grant_details_text = `เงินรางวัลตีพิมพ์สำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับชาติ ฐานข้อมูล Thai-Journal Citation Index (TCI) กลุ่ม 1 เป็นจำนวนเงิน 3,000 บาท และทุนสนับสนุนค่าใช้จ่ายการตีพิมพ์ตามที่จ่ายจริง เป็นจำนวนเงิน ${tciFundedAmount} บาท ทั้งนี้ขอเบิกเพียง 5,000 บาท`;
+                    break;
+                case "Quartile 1":
+                    grant_details_text = "เงินรางวัลสมทบสำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ปรากฏในฐานข้อมูลของการจัดอันดับวารสาร SCImago Journal Rank (SJR) หรือ ฐานข้อมูล ISI Web of Science, Scopus มีค่า Quartile 1 เป็นจำนวนเงิน 10,000 บาท";
+                    break;
+                case "Quartile 2":
+                    grant_details_text = "เงินรางวัลสมทบสำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ปรากฏในฐานข้อมูลของการจัดอันดับวารสาร SCImago Journal Rank (SJR) หรือ ฐานข้อมูล ISI Web of Science, Scopus มีค่า Quartile 2 เป็นจำนวนเงิน 7,000 บาท";
+                    break;
+                case "Quartile 3-4":
+                    grant_details_text = "เงินรางวัลสมทบสำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ปรากฏในฐานข้อมูลของการจัดอันดับวารสาร SCImago Journal Rank (SJR) หรือ ฐานข้อมูล ISI Web of Science, Scopus มีค่า Quartile 3-4 เป็นจำนวนเงิน 5,000 บาท";
+                    break;
+                case "Quartile 3-4 (มีสมทบ)":
+                    grant_details_text = "เงินรางวัลสำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ปรากฏในฐานข้อมูลของการจัดอันดับวารสาร SJR หรือ ฐานข้อมูล ISI มีค่า Quartile 3-4 จำนวนเงิน 5,000 บาท และเงินรางวัลสมทบ จำนวนเงิน 5,000 บาท รวมเป็นเงินทั้งสิ้น 10,000 บาท";
+                    break;
+                case "Scopus (ไม่มี Quartile)":
+                    grant_details_text = "เงินรางวัลตีพิมพ์สำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ไม่ปรากฏในฐานข้อมูลของการจัดอันดับวารสาร SJR / ฐานข้อมูล ISI แต่ปรากฏในฐานข้อมูล Scopus หรือ วารสารวิชาการที่ ก.พ.อ. ให้การยอมรับ เป็นจำนวนเงิน 2,000 บาท";
+                    break;
+                case "Quartile 3-4 (ซ้ำ)":
+                    grant_details_text = "เงินรางวัลสำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ปรากฏในฐานข้อมูลของการจัดอันดับวารสาร SJR หรือ ฐานข้อมูล ISI มีค่า Quartile 3-4 จำนวนเงิน 5,000 บาท";
+                    break;
+                default:
+                    grant_details_text = original_dropdown6_text;
+            }
+            
+            // 4. สร้าง funding_details
+            let funding_details = ""; 
+            if (fundingSourceText.includes("แหล่งทุนวิจัยภายนอก")) {
+                funding_details = `ได้รับทุนสนับสนุนจาก ${externalSource} ปีงบประมาณ ${fundingYear}`;
+            } else if (fundingSourceText.includes("งบประมาณส่วนตัว")) {
+                funding_details = "ใช้งบประมาณส่วนตัวเพื่อกำหนดภาระงาน";
+            } else if (fundingSourceText.includes("งบประมาณรายได้มหาวิทยาลัย")) {
+                funding_details = `ได้รับทุนจากงบประมาณรายได้มหาวิทยาลัยนเรศวร ปีงบประมาณ ${fundingYear}`;
+            } else if (fundingSourceText.includes("งบประมาณรายได้คณะ")) {
+                funding_details = `ได้รับทุนจากงบประมาณรายได้คณะมนุษยศาสตร์ มหาวิทยาลัยนเรศวร ปีงบประมาณ ${fundingYear}`;
+            } else {
+                funding_details = fundingSourceText; 
+            }
 
             const data = {
-                name: document.getElementById('name').value,
+                name: fullName, // <-- ใช้ชื่อเต็ม
                 department: document.getElementById('department').value,
                 phone: document.getElementById('phone').value,
                 record_date_th: formatDateToThai(document.getElementById('record_date').value),
                 doc_prefix: document.getElementById('doc_number_prefix').value,
-
                 article_title: document.getElementById('article_title').value,
                 article_type_text: getSelectedText('article_type'),
                 journal_name: document.getElementById('journal_name').value,
                 publish_date_th: formatDateToThai(document.getElementById('publish_date').value),
                 publish_pages: document.getElementById('publish_pages').value || '-',
                 database_source_text: getSelectedText('database_source'),
-                funding_source_text: getSelectedText('funding_source'),
+                funding_source_text: fundingSourceText,
+                funding_details: funding_details,
                 external_source: document.getElementById('external_source').value,
                 funding_year: document.getElementById('funding_year').value,
                 project_title: document.getElementById('project_title').value,
-
                 address: document.getElementById('address').value,
                 district: document.getElementById('district').value,
                 amphoe: document.getElementById('amphoe').value,
                 province: document.getElementById('province').value,
-                dropdown6_text: getSelectedText('dropdown6'),
-                dropdown7_value: new Intl.NumberFormat('th-TH').format(amountNum),
-                text3_total: document.getElementById('text3_total').value,
-                total_text_th: amountInBaht,
+                dropdown6_text: original_dropdown6_text,
+                grant_details_text: grant_details_text,
+                dropdown7_value: finalAmountFormatted, // <-- ใช้จำนวนเงินที่ format แล้ว
+                text3_total: finalAmountFormatted, // <-- ใช้จำนวนเงินที่ format แล้ว
+                total_text_th: amountInBaht, // <-- ใช้จำนวนเงินที่แปลงเป็นตัวอักษรแล้ว
 
+                // ▼▼▼ แก้ไข: เปลี่ยนสัญลักษณ์ติ๊กถูก ▼▼▼
                 box1_1: document.getElementById('box1.1').checked ? '🗸' : ' ',
                 box1_2: document.getElementById('box1.2').checked ? '🗸' : ' ',
                 box1_3: document.getElementById('box1.3').checked ? '🗸' : ' ',
@@ -1289,7 +1544,6 @@
             btn.innerHTML = originalHTML;
         }
     }
-    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
     document.addEventListener('DOMContentLoaded', () => {
         fetchData(); 
@@ -1339,13 +1593,99 @@
         sec4 = document.getElementById('form-section-4');
         submitContainer = document.getElementById('submit-button-container');
 
+        // ▼▼▼ 1.5 เพิ่มการดึงปุ่ม "ถัดไป" ▼▼▼
+        nextBtn1Container = document.getElementById('next-btn-1-container');
+        nextBtn2Container = document.getElementById('next-btn-2-container');
+        nextBtn3Container = document.getElementById('next-btn-3-container');
+        
+        const nextBtn1 = document.getElementById('next-btn-1');
+        const nextBtn2 = document.getElementById('next-btn-2');
+        const nextBtn3 = document.getElementById('next-btn-3');
+        // ▲▲▲ สิ้นสุดการเพิ่ม ▲▲▲
+
+        // ▼▼▼ 1.5 เพิ่ม Click Handlers สำหรับปุ่ม "ถัดไป" ▼▼▼
+        nextBtn1.addEventListener('click', () => {
+            nextBtn1Container.classList.add('hidden');
+            sec2.classList.remove('hidden');
+            sec2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            sec2.classList.add('was-scrolled'); // ใช้ class นี้เพื่อป้องกันการเลื่อนซ้ำ (ถ้าจำเป็น)
+        });
+        
+        nextBtn2.addEventListener('click', () => {
+            nextBtn2Container.classList.add('hidden');
+            sec3.classList.remove('hidden');
+            sec3.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            sec3.classList.add('was-scrolled');
+        });
+        
+        nextBtn3.addEventListener('click', () => {
+            nextBtn3Container.classList.add('hidden');
+            sec4.classList.remove('hidden');
+            submitContainer.classList.remove('hidden');
+            sec4.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            sec4.classList.add('was-scrolled');
+        });
+        // ▲▲▲ สิ้นสุดการเพิ่ม ▲▲▲
+
         document.getElementById('name').addEventListener('input', autofillData); 
         document.getElementById('clear-name-btn').addEventListener('click', clearNameInput); 
         
         document.getElementById('article_type').addEventListener('change', () => updateFormVisibility(true));
         document.getElementById('database_source').addEventListener('change', () => updateFormVisibility(true));
-        document.getElementById('dropdown6').addEventListener('change', () => updateFormVisibility(true));
+
+        // ▼▼▼ เพิ่ม Logic ใหม่นี้ ▼▼▼
+        document.getElementById('dropdown6').addEventListener('change', function() {
+            const selectedGrantValue = this.value;
+            const details = grantDetails[selectedGrantValue];
+            
+            const fixedWrapper = document.getElementById('fixed_amount_wrapper');
+            const variableWrapper = document.getElementById('variable_amount_wrapper');
+            const variableInput = document.getElementById('variable_amount_input');
+            const variableHelper = document.getElementById('variable_amount_helper');
+            const tciWrapper = document.getElementById('tci_funded_amount_wrapper');
+
+            // รีเซ็ตทุกอย่างก่อน
+            // ▼▼▼ 6. เพิ่ม 2 บรรทัดนี้ ▼▼▼
+            variableInput.dataset.max = ''; 
+            variableHelper.classList.remove('font-bold');
+            // ▲▲▲ สิ้นสุดการแก้ไข ▲▲▲
+            variableWrapper.classList.add('hidden');
+            fixedWrapper.classList.remove('hidden');
+            tciWrapper.classList.add('hidden');
+            variableInput.value = '';
+            choicesDropdown7.enable();
+            choicesDropdown7.setChoiceByValue('');
+
+            if (details) {
+                if (details.type === 'fixed') {
+                    // A: กรณีเงินตายตัว
+                    choicesDropdown7.setChoiceByValue(details.amount.toString());
+                    choicesDropdown7.disable();
+                } else if (details.type === 'variable') {
+                    // B: กรณีเงินไม่ตายตัว (เปลี่ยนเป็น Text Input)
+                    fixedWrapper.classList.add('hidden');
+                    variableWrapper.classList.remove('hidden');
+                    variableHelper.textContent = `โปรดระบุจำนวนเงิน (ไม่เกิน ${details.max.toLocaleString()} บาท)`;
+                    variableInput.dataset.max = details.max; // <-- 6. เพิ่มบรรทัดนี้
+                } else if (details.type === 'hybrid' && selectedGrantValue === 'TCI กลุ่ม 1 (มีทุน)') {
+                    // C: กรณี TCI (มีทุน)
+                    choicesDropdown7.setChoiceByValue(details.amount.toString());
+                    choicesDropdown7.disable();
+                    tciWrapper.classList.remove('hidden');
+                }
+            }
+            
+            updateTotal(); // อัปเดตช่อง "รวม"
+            updateFormVisibility(true);
+_            
+        });
+        
+        // ▼▼▼ 7. แก้ไข Event Listener 2 บรรทัดนี้ ▼▼▼
+        document.getElementById('variable_amount_input').addEventListener('input', validateAmountInput);
+        document.getElementById('variable_amount_input').addEventListener('blur', formatAmountInput);
+        // ▲▲▲ สิ้นสุดการแก้ไข ▲▲▲
         document.getElementById('dropdown7').addEventListener('change', updateTotal); 
+        // ▲▲▲ สิ้นสุด Logic ใหม่ ▲▲▲
 
         document.getElementById('funding-form').addEventListener('submit', handleFormSubmit);
         document.getElementById('funding_source').addEventListener('change', () => {
@@ -1362,7 +1702,18 @@
         setupClearableInput('amphoe', true);
         setupClearableInput('province', true); 
         setupClearableInput('external_source', true);
-        setupClearableInput('funding_year', true);
+
+        // ▼▼▼ 8. แก้ไขการตั้งค่า Listener สำหรับช่องตัวเลข ▼▼▼
+        const fundingYearInput = document.getElementById('funding_year');
+        fundingYearInput.addEventListener('input', (e) => handleNumericInput(e, 4)); // 4 คือความยาวสูงสุด
+        setupClearableInput('funding_year', true); // ยังคงเก็บ clear button ไว้
+        
+        const tciAmountInput = document.getElementById('tci_funded_amount');
+        tciAmountInput.addEventListener('input', (e) => handleNumericInput(e)); // ไม่จำกัดความยาว
+        setupClearableInput('tci_funded_amount', true); // ยังคงเก็บ clear button ไว้
+        // ▲▲▲ สิ้นสุดการแก้ไข ▲▲▲
+
+        setupClearableInput('variable_amount_input', true); // <-- เพิ่ม
 
         handleFundingSourceChange(); 
         updateFormVisibility(false); 
