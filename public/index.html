@@ -91,9 +91,18 @@
             box-shadow: none !important;
             line-height: normal !important;
         }
-         .flatpickr-current-month input.numInput:hover {
+        .flatpickr-current-month input.numInput:hover {
             background: transparent !important; 
-         }
+        }
+        /* ป้องกันการแก้ไขปีในปฏิทิน */
+        .flatpickr-current-month input.cur-year {
+            pointer-events: auto !important;
+        }
+
+        .flatpickr-current-month input.numInput[disabled] {
+            opacity: 1 !important;
+            color: #374151 !important;
+        }
         .flatpickr-prev-month svg,
         .flatpickr-next-month svg {
             fill: #f3f4f6; 
@@ -485,7 +494,7 @@
                         <option>วารสารระดับนานาชาติ (Quartile 2)</option>
                         <option>วารสารระดับนานาชาติ (Quartile 3)</option>
                         <option>วารสารระดับนานาชาติ (Quartile 4)</option>
-                        <option value="other"   >วารสารระดับนานาชาติ (อยู่ในฐานข้อมูลที่ กพอ.ยอมรับ (โปรดระบุชื่อฐานข้อมูล))</option>
+                        <option value="other"   >วารสารระดับนานาชาติ (อยู่ในฐานข้อมูลที่ กพอ.ยอมรับ))</option>
                     </select>
                     <div id="custom_database_wrapper" class="hidden mt-2 pl-4">
                         <label for="custom_database" class="block text-sm font-medium text-gray-700">
@@ -502,6 +511,7 @@
                             </button>
                         </div>
                     </div>
+                </div>
                 <div class="md:col-span-2">
                     <label for="funding_source" class="block text-sm font-medium text-gray-700">โครงการวิจัยจาก</label>
                     <select id="funding_source" name="funding_source" required class="mt-1 block w-full">
@@ -866,8 +876,23 @@
 
     function formatDateToThai(dateString) {
         if (!dateString) return '';
-        const date = new Date(dateString);
-        const thaiYear = date.getFullYear() + 543;
+    
+        // ▼▼▼ เพิ่มการตรวจสอบว่าเป็น พ.ศ. หรือ ค.ศ. ▼▼▼
+        const parts = dateString.split('-');
+        if (parts.length !== 3) return '';
+    
+        let year = parseInt(parts[0]);
+        const month = parseInt(parts[1]) - 1; // Month is 0-indexed
+        const day = parseInt(parts[2]);
+    
+        // ถ้าปีเป็น พ.ศ. (> 2400) ให้แปลงเป็น ค.ศ. ก่อน
+        if (year > 2400) {
+            year = year - 543;
+        }
+    
+        const date = new Date(year, month, day);
+        const thaiYear = date.getFullYear() + 543; // ตอนนี้แน่ใจว่าเป็น ค.ศ. แล้ว ค่อยบวก 543
+    
         const thaiMonths = [
             "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
             "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
@@ -1358,6 +1383,7 @@
 
         const articleTypeText = getSelectedText('article_type');
         const databaseSourceText = getSelectedText('database_source');
+        const customDatabase = document.getElementById('custom_database').value.trim(); // ← เพิ่มบรรทัดนี้
         let finalDatabaseText = databaseSourceText;
         if (formData.get('database_source') === 'other' && customDatabase !== '') {
             finalDatabaseText = `วารสารระดับนานาชาติ (${customDatabase})`;
@@ -1464,6 +1490,12 @@
             const fundingSourceText = getSelectedText('funding_source');
             const externalSource = document.getElementById('external_source').value;
             const fundingYear = document.getElementById('funding_year').value;
+            const databaseSourceText = getSelectedText('database_source');
+            const customDatabase = document.getElementById('custom_database').value.trim();
+            let finalDatabaseText = databaseSourceText;
+            if (document.getElementById('database_source').value === 'other' && customDatabase !== '') {
+                finalDatabaseText = `วารสารระดับนานาชาติ (${customDatabase})`;
+            }
 
             // 3. สร้าง "ข้อความยาว" (grant_details_text)
             let grant_details_text = ""; 
@@ -1577,6 +1609,28 @@
             btn.innerHTML = originalHTML;
         }
     }
+    
+    // ฟังก์ชันสำหรับแปลงปีในปฏิทินเป็น พ.ศ.
+    function convertYearToBuddhistEra(instance) {
+        const yearInput = instance.currentYearElement;
+        if (yearInput && yearInput.value) {
+            const currentValue = parseInt(yearInput.value);
+            // ถ้าเป็น ค.ศ. (< 2400) ให้แปลงเป็น พ.ศ.
+            if (currentValue < 2400) {
+                yearInput.value = currentValue + 543;
+            }
+        }
+    
+        // ป้องกันการพิมพ์ปีเอง
+        if (yearInput) {
+            yearInput.addEventListener('input', function(e) {
+                const val = parseInt(this.value);
+                if (val && val < 2400) {
+                    this.value = val + 543;
+                }
+            });
+        }
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
         fetchData(); 
@@ -1588,50 +1642,39 @@
             defaultDate: "today",
             clickOpens: false,
             position: "auto right",
-            // ▼▼▼ เพิ่มส่วนนี้เพื่อแสดงปี พ.ศ. ▼▼▼
-            onReady: function(selectedDates, dateStr, instance) {
-                const yearInput = instance.currentYearElement;
-                if (yearInput) {
-                    yearInput.value = parseInt(yearInput.value) + 543;
+            // ▼▼▼ ใช้ parseDate และ formatDate ▼▼▼
+            parseDate: (datestr, format) => {
+                // แปลง พ.ศ. เป็น ค.ศ. สำหรับการบันทึก
+                const parts = datestr.split('-');
+                if (parts.length === 3 && parseInt(parts[0]) > 2400) {
+                    parts[0] = parseInt(parts[0]) - 543; // ลบ 543 ถ้าเป็น พ.ศ.
+                    return new Date(parts.join('-'));
                 }
+                return new Date(datestr);
             },
-            onMonthChange: function(selectedDates, dateStr, instance) {
-                const yearInput = instance.currentYearElement;
-                if (yearInput) {
-                    const currentYear = parseInt(yearInput.value);
-                    if (currentYear < 2400) { // ถ้ายังเป็น ค.ศ.
-                        yearInput.value = currentYear + 543;
-                    }
-                }
+            formatDate: (date, format) => {
+                // แสดงเป็น พ.ศ.
+                const year = date.getFullYear() + 543;
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
             },
-            onYearChange: function(selectedDates, dateStr, instance) {
-                const yearInput = instance.currentYearElement;
-                if (yearInput) {
-                    const currentYear = parseInt(yearInput.value);
-                    if (currentYear < 2400) { // ถ้ายังเป็น ค.ศ.
-                        yearInput.value = currentYear + 543;
-                    }
-                }
+            onReady: (selectedDates, dateStr, instance) => {
+                // เปลี่ยนปีในปฏิทินเป็น พ.ศ. เมื่อเปิด
+                convertYearToBuddhistEra(instance);
             },
-            onOpen: function(selectedDates, dateStr, instance) {
-                const yearInput = instance.currentYearElement;
-                if (yearInput) {
-                    const currentYear = parseInt(yearInput.value);
-                    if (currentYear < 2400) {
-                        yearInput.value = currentYear + 543;
-                    }
-                }
+            onOpen: (selectedDates, dateStr, instance) => {
+                convertYearToBuddhistEra(instance);
+            },
+            onMonthChange: (selectedDates, dateStr, instance) => {
+                convertYearToBuddhistEra(instance);
+            },
+            onYearChange: (selectedDates, dateStr, instance) => {
+                convertYearToBuddhistEra(instance);
             },
             onChange: function(selectedDates, dateStr, instance) {
+                convertYearToBuddhistEra(instance);
                 updateFormVisibility(true);
-                // แสดงปี พ.ศ. หลังเลือกวันที่
-                const yearInput = instance.currentYearElement;
-                if (yearInput) {
-                    const currentYear = parseInt(yearInput.value);
-                    if (currentYear < 2400) {
-                        yearInput.value = currentYear + 543;
-                    }
-                }
             }
         });
 
@@ -1641,51 +1684,37 @@
             dateFormat: "Y-m-d",
             clickOpens: false,
             position: "auto right",
-            // ▼▼▼ เพิ่มส่วนเดียวกันสำหรับ publishDatePicker ▼▼▼
-            onReady: function(selectedDates, dateStr, instance) {
-                const yearInput = instance.currentYearElement;
-                if (yearInput) {
-                    yearInput.value = parseInt(yearInput.value) + 543;
+            parseDate: (datestr, format) => {
+                const parts = datestr.split('-');
+                if (parts.length === 3 && parseInt(parts[0]) > 2400) {
+                    parts[0] = parseInt(parts[0]) - 543;
+                    return new Date(parts.join('-'));
                 }
+                return new Date(datestr);
             },
-            onMonthChange: function(selectedDates, dateStr, instance) {
-                const yearInput = instance.currentYearElement;
-                if (yearInput) {
-                    const currentYear = parseInt(yearInput.value);
-                    if (currentYear < 2400) {
-                        yearInput.value = currentYear + 543;
-                    }
-                }
+            formatDate: (date, format) => {
+                const year = date.getFullYear() + 543;
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
             },
-            onYearChange: function(selectedDates, dateStr, instance) {
-                const yearInput = instance.currentYearElement;
-                if (yearInput) {
-                        const currentYear = parseInt(yearInput.value);
-                    if (currentYear < 2400) {
-                        yearInput.value = currentYear + 543;
-                    }
-                }
+            onReady: (selectedDates, dateStr, instance) => {
+                convertYearToBuddhistEra(instance);
             },
-            onOpen: function(selectedDates, dateStr, instance) {
-                const yearInput = instance.currentYearElement;
-                if (yearInput) {
-                    const currentYear = parseInt(yearInput.value);
-                    if (currentYear < 2400) {
-                        yearInput.value = currentYear + 543;
-                    }
-                }
+            onOpen: (selectedDates, dateStr, instance) => {
+                convertYearToBuddhistEra(instance);
+            },
+            onMonthChange: (selectedDates, dateStr, instance) => {
+                convertYearToBuddhistEra(instance);
+            },
+            onYearChange: (selectedDates, dateStr, instance) => {
+                convertYearToBuddhistEra(instance);
             },
             onChange: function(selectedDates, dateStr, instance) {
+                convertYearToBuddhistEra(instance);
                 updateFormVisibility(true);
-                const yearInput = instance.currentYearElement;
-                if (yearInput) {
-                    const currentYear = parseInt(yearInput.value);
-                    if (currentYear < 2400) {
-                        yearInput.value = currentYear + 543;
-                     }
-                }
             }
-        });
+        }); 
 
         const choicesConfig = {
             searchEnabled: false,
