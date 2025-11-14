@@ -3,3 +3,4 @@ node_modules/
 .env
 service-account-key.js
 service-account-key.json
+.vercel

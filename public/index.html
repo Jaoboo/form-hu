@@ -953,6 +953,7 @@
         document.getElementById('fixed_amount_wrapper').classList.remove('hidden');
         document.getElementById('variable_amount_wrapper').classList.add('hidden');
         document.getElementById('variable_amount_input').value = '';
+        document.getElementById('variable_amount_input').readOnly = false;
         document.getElementById('variable_amount_helper').textContent = '';
         
         document.getElementById('variable_amount_input').dataset.max = ''; 
@@ -1141,24 +1142,44 @@
         }
     }
     
-    // ▼▼▼ แทนที่ updateTotal() เดิมด้วยโค้ดนี้ ▼▼▼
     function updateTotal() {
-         // ตรวจสอบว่าช่อง Input (Variable) แสดงอยู่หรือไม่
-         const variableWrapper = document.getElementById('variable_amount_wrapper');
-         let amount = '';
+        const grantType = document.getElementById('dropdown6').value;
+        const details = grantDetails[grantType];
+        let amount = 0; // นี่คือค่าที่จะไปอยู่ในช่อง "รวม (บาท)"
+        let amountStr = '0';
+        
+        if (grantType === 'TCI กลุ่ม 1 (มีทุน)') {
+            // --- (ตรรกะใหม่) ตามที่จ่ายจริง, สูงสุด 5,000 ---
+            const maxGrant = 5000;
+            const actualCostInput = document.getElementById('tci_funded_amount');
+            const unitPriceInput = document.getElementById('variable_amount_input'); // ช่อง "หน่วยละ"
+            
+            // 1. ดึงค่า "จ่ายจริง"
+            let actualCost = parseInt(actualCostInput.value.replace(/[^0-9]/g, ''), 10) || 0;
+            
+            // 2. หายอดที่น้อยกว่า ระหว่าง (จ่ายจริง) กับ (เพดาน 5000)
+            amount = Math.min(actualCost, maxGrant); 
+            
+            // 3. อัปเดตช่อง "หน่วยละ" (แบบ Input) ให้อัตโนมัติ
+            unitPriceInput.value = amount ? new Intl.NumberFormat().format(amount) : '';
 
-         if (!variableWrapper.classList.contains('hidden')) {
-             // ถ้าช่อง Input แสดงอยู่ ให้ดึงค่าจากช่อง Input
-             amount = document.getElementById('variable_amount_input').value.replace(/,/g, '') || '0';
-         } else {
-             // ถ้าช่อง Dropdown แสดงอยู่ ให้ดึงค่าจาก Dropdown
-             amount = document.getElementById('dropdown7').value;
-         }
-         
-         // อัปเดตช่อง "รวม"
-         document.getElementById('text3_total').value = amount ? new Intl.NumberFormat().format(amount) : '';
-         
-         updateFormVisibility(true); 
+         } else if (details) {
+            // --- 2. ตรรกะเดิมสำหรับทุนอื่นๆ ---
+            if (details.type === 'variable') {
+                const variableInput = document.getElementById('variable_amount_input');
+                amountStr = variableInput.value.replace(/,/g, '') || '0';
+                const max = parseInt(variableInput.dataset.max, 10) || Infinity;
+                amount = Math.min(parseInt(amountStr, 10) || 0, max);
+            } else if (details.type === 'fixed') {
+                amountStr = document.getElementById('dropdown7').value || '0';
+                amount = parseInt(amountStr, 10) || 0;
+            }
+        }
+        
+        // --- 3. อัปเดตช่อง "รวม (บาท)" ---
+        document.getElementById('text3_total').value = amount ? new Intl.NumberFormat().format(amount) : '';
+        
+        updateFormVisibility(true); 
     }
 
     function handleNumericInput(event, maxLength = null) {
@@ -1394,7 +1415,8 @@
         
         const totalAmount = document.getElementById('text3_total').value;
 
-        const dataToSave = [                 
+        const dataToSave = [   
+            formData.get('record_date'),              
             formData.get('name'),
             formData.get('department'),
             formData.get('article_title'),
@@ -1406,8 +1428,7 @@
             fundingSourceText,
             formData.get('project_title'),
             dropdown6Text,
-            totalAmount,
-            ''
+            totalAmount
         ];
         try {
             const response = await fetch('/api/append-sheet', {
@@ -1441,7 +1462,6 @@
         saveBtn.textContent = 'ส่งข้อมูลและบันทึก';
     }
 
-    // ▼▼▼ แทนที่ generateWord() เดิมด้วยโค้ดนี้ ▼▼▼
     async function generateWord() {
         const btn = document.getElementById('popup-download-btn');
         const originalHTML = btn.innerHTML;
@@ -1510,7 +1530,16 @@
                     grant_details_text = "เงินรางวัลตีพิมพ์สำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับชาติ ฐานข้อมูล Thai-Journal Citation Index (TCI) กลุ่ม 1 เป็นจำนวนเงิน 3,000 บาท";
                     break;
                 case "TCI กลุ่ม 1 (มีทุน)":
-                    grant_details_text = `เงินรางวัลตีพิมพ์สำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับชาติ ฐานข้อมูล Thai-Journal Citation Index (TCI) กลุ่ม 1 เป็นจำนวนเงิน 3,000 บาท และทุนสนับสนุนค่าใช้จ่ายการตีพิมพ์ตามที่จ่ายจริง เป็นจำนวนเงิน ${tciFundedAmount} บาท ทั้งนี้ขอเบิกเพียง 5,000 บาท`;
+                    const tciCostNum = parseInt(tciFundedAmount) || 0; // "จ่ายจริง"
+                    const tciCostFormatted = new Intl.NumberFormat('th-TH').format(tciCostNum);
+          
+                    // finalAmountFormatted คือยอดที่คำนวณแล้ว (min(tciCostNum, 5000))
+          
+                    if (tciCostNum > 5000) {
+                        grant_details_text = `ทุนสนับสนุนค่าใช้จ่ายการตีพิมพ์สำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับชาติ ฐานข้อมูล Thai-Journal Citation Index (TCI) กลุ่ม 1 ตามที่จ่ายจริง เป็นจำนวนเงิน ${tciCostFormatted} บาท ทั้งนี้ขอเบิกเพียง ${finalAmountFormatted} บาท`;
+                    } else {
+                        grant_details_text = `ทุนสนับสนุนค่าใช้จ่ายการตีพิมพ์สำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับชาติ ฐานข้อมูล Thai-Journal Citation Index (TCI) กลุ่ม 1 ตามที่จ่ายจริง เป็นจำนวนเงิน ${finalAmountFormatted} บาท ทั้งนี้ขอเบิกเพียง ${finalAmountFormatted} บาท`;
+                    }
                     break;
                 case "Quartile 1":
                     grant_details_text = "เงินรางวัลสมทบสำหรับผลงานที่ได้รับการตีพิมพ์ในวารสารระดับนานาชาติที่ปรากฏในฐานข้อมูลของการจัดอันดับวารสาร SCImago Journal Rank (SJR) หรือ ฐานข้อมูล ISI Web of Science, Scopus มีค่า Quartile 1 เป็นจำนวนเงิน 10,000 บาท";
@@ -1806,13 +1835,14 @@
 
             // รีเซ็ตทุกอย่างก่อน
             // ▼▼▼ 6. เพิ่ม 2 บรรทัดนี้ ▼▼▼
-            variableInput.dataset.max = ''; 
+            variableInput.dataset.max = ''; 
             variableHelper.classList.remove('font-bold');
             // ▲▲▲ สิ้นสุดการแก้ไข ▲▲▲
             variableWrapper.classList.add('hidden');
             fixedWrapper.classList.remove('hidden');
             tciWrapper.classList.add('hidden');
             variableInput.value = '';
+            variableInput.readOnly = false;
             choicesDropdown7.enable();
             choicesDropdown7.setChoiceByValue('');
 
@@ -1828,11 +1858,14 @@
                     variableHelper.textContent = `โปรดระบุจำนวนเงิน (ไม่เกิน ${details.max.toLocaleString()} บาท)`;
                     variableInput.dataset.max = details.max; // <-- 6. เพิ่มบรรทัดนี้
                 } else if (details.type === 'hybrid' && selectedGrantValue === 'TCI กลุ่ม 1 (มีทุน)') {
-                    // C: กรณี TCI (มีทุน)
-                    choicesDropdown7.setChoiceByValue(details.amount.toString());
-                    choicesDropdown7.disable();
-                    tciWrapper.classList.remove('hidden');
-                }
+                   // C: กรณี TCI (มีทุน) - (แก้ไข)
+                   fixedWrapper.classList.add('hidden'); // ซ่อน Dropdown "หน่วยละ"
+                   variableWrapper.classList.remove('hidden'); // แสดง Input "หน่วยละ"
+                   variableInput.readOnly = true; // ตั้งเป็นอ่านอย่างเดียว
+                   variableHelper.textContent = 'สูงสุด 5,000 บาท'; 
+                   variableInput.dataset.max = details.amount; // ตั้งค่า max (5000)
+                   tciWrapper.classList.remove('hidden'); // แสดงช่อง "จ่ายจริง"
+              }
             }
             
             updateTotal(); // อัปเดตช่อง "รวม"
@@ -1870,7 +1903,10 @@
         setupClearableInput('funding_year', true); // ยังคงเก็บ clear button ไว้
         
         const tciAmountInput = document.getElementById('tci_funded_amount');
-        tciAmountInput.addEventListener('input', (e) => handleNumericInput(e)); // ไม่จำกัดความยาว
+        tciAmountInput.addEventListener('input', (e) => {
+            handleNumericInput(e); // 1. ยังคงจำกัดให้เป็นตัวเลข
+            updateTotal(); // 2. (★ เพิ่ม) คำนวณยอดรวมใหม่ทันที
+        });
         setupClearableInput('tci_funded_amount', true); // ยังคงเก็บ clear button ไว้
         // ▲▲▲ สิ้นสุดการแก้ไข ▲▲▲
 
