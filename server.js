@@ -15,7 +15,7 @@ const app = express();
 app.use(cors()); 
 app.use(express.json()); 
 
-app.use(express.static('public')); // ดีมากครับ ที่มีบรรทัดนี้ Vercel จะหา index.html เจอ
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Endpoint สำหรับการ "อ่าน" ข้อมูล
 app.get('/api/read-sheet', async (req, res) => {
